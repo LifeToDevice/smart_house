@@ -5,7 +5,6 @@ void net_init( char send_attempts )
     net_send_attempts = send_attempts;
 }
 
-
 // Установка параметров приемопередатчика
 // addr - адрес
 // ack_wait_time - время ожидания подтверждающего отвеного пакета

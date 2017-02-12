@@ -1,3 +1,5 @@
+// Error messages
+
 #define ERR_OK          0
 #define ERR_FAIL        1
 #define ERR_SEND_BUSY   2

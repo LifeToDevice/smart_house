@@ -5,9 +5,7 @@
   Revert: false
   XorOut: 0x00
   Check : 0xF7 ("123456789")
-  MaxLen: 15 байт(127 бит) - обнаружение
-  одинарных, двойных, тройных 
-  и всех нечетных ошибок
+  MaxLen: 15 bytes (127 bit)
 */
 
 unsigned char crc8( uchar *block, uchar len )
@@ -32,8 +30,7 @@ unsigned char crc8( uchar *block, uchar len )
   Revert: false
   XorOut: 0x0000
   Check : 0x29B1 ("123456789")
-  MaxLen: 4095 байт (32767 бит) - обнаружение
-    одинарных, двойных, тройных и всех нечетных ошибок
+  MaxLen: 4095 bytes (32767 bit)
 */
 
 unsigned short crc16( uchar *block, ushort len )
