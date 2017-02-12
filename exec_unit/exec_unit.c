@@ -9,53 +9,53 @@
 
 #define DEFAULT_ADDRESS 1
 
-// Состояния (служебные переменные)
+// РЎРѕСЃС‚РѕСЏРЅРёСЏ (СЃР»СѓР¶РµР±РЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ)
 ulong curr_sensors_state = 0;
 ulong prev_sensors_state = 0;
 ulong curr_motors_state  = 0;
 ulong prev_motors_state  = 0;
 
-// Состояние двигателей (2 байта)
+// РЎРѕСЃС‚РѕСЏРЅРёРµ РґРІРёРіР°С‚РµР»РµР№ (2 Р±Р°Р№С‚Р°)
 ulong motors_state       = 0;
-// Состояние датчиков (3 байта)
+// РЎРѕСЃС‚РѕСЏРЅРёРµ РґР°С‚С‡РёРєРѕРІ (3 Р±Р°Р№С‚Р°)
 ulong sensors_state      = 0;
 
-// Изменения
+// РР·РјРµРЅРµРЅРёСЏ
 uchar changes            = FALSE;
 
-// Признак работы в сети
+// РџСЂРёР·РЅР°Рє СЂР°Р±РѕС‚С‹ РІ СЃРµС‚Рё
 uchar is_connected       = FALSE;
 
-// Перезагрузка
+// РџРµСЂРµР·Р°РіСЂСѓР·РєР°
 uchar reboot_needed      = FALSE;
 
-// Флаг подключения кабеля USB
+// Р¤Р»Р°Рі РїРѕРґРєР»СЋС‡РµРЅРёСЏ РєР°Р±РµР»СЏ USB
 uchar usb_state_on       = FALSE;
 
-// Номер (адрес) блока
+// РќРѕРјРµСЂ (Р°РґСЂРµСЃ) Р±Р»РѕРєР°
 uchar unit_number        = DEFAULT_ADDRESS;
 
-// Количество двигателей с защитой
+// РљРѕР»РёС‡РµСЃС‚РІРѕ РґРІРёРіР°С‚РµР»РµР№ СЃ Р·Р°С‰РёС‚РѕР№
 uchar protected_motors   = 0;
 
-// Двигатели
+// Р”РІРёРіР°С‚РµР»Рё
 struct s_motor motors[MOTOR_MAX];
 
 code ulong protected_mask[MOTOR_MAX + 1] =
 { 
-    0b111111111111111111111111,              // Нет двигателей с защитой
-    0b101111111111111111111111,              // 1 двигатель с защитой
-    0b100111111111111111111111,              // 2 двигателя с защитой
-    0b100011111111111111111111,              // 3 двигателя с защитой
-    0b100001111111111111111111,              // 4 двигателя с защитой
-    0b100000111111111111111111,              // 5 двигателей с защитой
-    0b100000011111111111111111,              // 6 двигателей с защитой
-    0b100000001111111111111111,              // 7 двигателей с защитой
-    0b100000000111111111111111,              // 8 двигателей с защитой
+    0b111111111111111111111111,              // РќРµС‚ РґРІРёРіР°С‚РµР»РµР№ СЃ Р·Р°С‰РёС‚РѕР№
+    0b101111111111111111111111,              // 1 РґРІРёРіР°С‚РµР»СЊ СЃ Р·Р°С‰РёС‚РѕР№
+    0b100111111111111111111111,              // 2 РґРІРёРіР°С‚РµР»СЏ СЃ Р·Р°С‰РёС‚РѕР№
+    0b100011111111111111111111,              // 3 РґРІРёРіР°С‚РµР»СЏ СЃ Р·Р°С‰РёС‚РѕР№
+    0b100001111111111111111111,              // 4 РґРІРёРіР°С‚РµР»СЏ СЃ Р·Р°С‰РёС‚РѕР№
+    0b100000111111111111111111,              // 5 РґРІРёРіР°С‚РµР»РµР№ СЃ Р·Р°С‰РёС‚РѕР№
+    0b100000011111111111111111,              // 6 РґРІРёРіР°С‚РµР»РµР№ СЃ Р·Р°С‰РёС‚РѕР№
+    0b100000001111111111111111,              // 7 РґРІРёРіР°С‚РµР»РµР№ СЃ Р·Р°С‰РёС‚РѕР№
+    0b100000000111111111111111,              // 8 РґРІРёРіР°С‚РµР»РµР№ СЃ Р·Р°С‰РёС‚РѕР№
 };
 
 
-// Инициализация
+// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
 void motor_init( )
 {
     M1_DIR = 0;
@@ -79,9 +79,9 @@ void motor_init( )
     memset(motors, 0, sizeof(struct s_motor) * MOTOR_MAX);
 }
 
-// Установка состояния двигателя (включение или отключение)
-// motor - номер двигателя (1..MOTORS_MAX)
-// state - 0 - отключение, 1 - запуск
+// РЈСЃС‚Р°РЅРѕРІРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ РґРІРёРіР°С‚РµР»СЏ (РІРєР»СЋС‡РµРЅРёРµ РёР»Рё РѕС‚РєР»СЋС‡РµРЅРёРµ)
+// motor - РЅРѕРјРµСЂ РґРІРёРіР°С‚РµР»СЏ (1..MOTORS_MAX)
+// state - 0 - РѕС‚РєР»СЋС‡РµРЅРёРµ, 1 - Р·Р°РїСѓСЃРє
 void motor_set_state( uchar motor, uchar state )
 {
     switch ( motor )
@@ -113,7 +113,7 @@ void motor_set_state( uchar motor, uchar state )
     }
 }
 
-// Состояние защиты двигателей
+// РЎРѕСЃС‚РѕСЏРЅРёРµ Р·Р°С‰РёС‚С‹ РґРІРёРіР°С‚РµР»РµР№
 uchar motor_get_fail_state( )
 {
     char i;
@@ -126,8 +126,8 @@ uchar motor_get_fail_state( )
     return s;
 }
 
-// Чтение состояний двигателей
-// Возвращаемое значение: 1 - есть изменения, 0 - нет изменений, state - состояние
+// Р§С‚РµРЅРёРµ СЃРѕСЃС‚РѕСЏРЅРёР№ РґРІРёРіР°С‚РµР»РµР№
+// Р’РѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ: 1 - РµСЃС‚СЊ РёР·РјРµРЅРµРЅРёСЏ, 0 - РЅРµС‚ РёР·РјРµРЅРµРЅРёР№, state - СЃРѕСЃС‚РѕСЏРЅРёРµ
 char motor_read( ulong *state )
 {
     char res = 0;
@@ -143,7 +143,7 @@ char motor_read( ulong *state )
     return res;
 }
 
-// Запуск двигателя
+// Р—Р°РїСѓСЃРє РґРІРёРіР°С‚РµР»СЏ
 void motor_start( uchar number )
 {
     TMR1IE_bit = 0;
@@ -154,14 +154,14 @@ void motor_start( uchar number )
     TMR1IE_bit = 1;
 }
 
-// Остановка двигателя
+// РћСЃС‚Р°РЅРѕРІРєР° РґРІРёРіР°С‚РµР»СЏ
 void motor_stop( uchar number, uchar failure )
 {
     motor_set_state(number + 1, 0);
     motors[number].state = failure ? 2 : 0;
 }
 
-// Запуск защиты после разгона двигателей
+// Р—Р°РїСѓСЃРє Р·Р°С‰РёС‚С‹ РїРѕСЃР»Рµ СЂР°Р·РіРѕРЅР° РґРІРёРіР°С‚РµР»РµР№
 void motor_acceleration_control( )
 {
     char i;
@@ -171,26 +171,26 @@ void motor_acceleration_control( )
                 motors[i].ready = TRUE;
 }
 
-// Контроль защиты
+// РљРѕРЅС‚СЂРѕР»СЊ Р·Р°С‰РёС‚С‹
 void motor_protect_control( )
 {
     char i;
     for ( i = 0; i < MOTOR_MAX; ++i )
     {
-        // Пропускаем незапущенные двигатели, двигатели со сработавшей защитой и двигатели без защиты
+        // РџСЂРѕРїСѓСЃРєР°РµРј РЅРµР·Р°РїСѓС‰РµРЅРЅС‹Рµ РґРІРёРіР°С‚РµР»Рё, РґРІРёРіР°С‚РµР»Рё СЃРѕ СЃСЂР°Р±РѕС‚Р°РІС€РµР№ Р·Р°С‰РёС‚РѕР№ Рё РґРІРёРіР°С‚РµР»Рё Р±РµР· Р·Р°С‰РёС‚С‹
         if ( motors[i].state != 1 || motors[i].protect == 0 )
             continue;
 
-        // Если двигатель работает и сработал датчик снижения скорости
+        // Р•СЃР»Рё РґРІРёРіР°С‚РµР»СЊ СЂР°Р±РѕС‚Р°РµС‚ Рё СЃСЂР°Р±РѕС‚Р°Р» РґР°С‚С‡РёРє СЃРЅРёР¶РµРЅРёСЏ СЃРєРѕСЂРѕСЃС‚Рё
         if ( motors[i].ready && motors[i].sensor_state )
         {
-            // Отключаем двигатель
+            // РћС‚РєР»СЋС‡Р°РµРј РґРІРёРіР°С‚РµР»СЊ
             motor_stop(i, TRUE);
         }
     }
 }
 
-// Сброс аварийного состояния двигателей
+// РЎР±СЂРѕСЃ Р°РІР°СЂРёР№РЅРѕРіРѕ СЃРѕСЃС‚РѕСЏРЅРёСЏ РґРІРёРіР°С‚РµР»РµР№
 void motor_reset_fail_state( )
 {
     char i;
@@ -199,7 +199,7 @@ void motor_reset_fail_state( )
             motors[i].state = 0;
 }
 
-// Установка контролируемых двигателей
+// РЈСЃС‚Р°РЅРѕРІРєР° РєРѕРЅС‚СЂРѕР»РёСЂСѓРµРјС‹С… РґРІРёРіР°С‚РµР»РµР№
 unsigned char motor_get_protected( )
 {
     char i, n = 0;
@@ -212,7 +212,7 @@ unsigned char motor_get_protected( )
 
 void timer1_init( )
 {
-    // Таймер 1 - 100 мс
+    // РўР°Р№РјРµСЂ 1 - 100 РјСЃ
     T1CON      = 0x31;
     TMR1IF_bit = 0;
     TMR1H      = 0x0B;
@@ -220,12 +220,12 @@ void timer1_init( )
     TMR1IE_bit = 1;
 }
 
-// Загрузка конфигурации исполнительного блока
+// Р—Р°РіСЂСѓР·РєР° РєРѕРЅС„РёРіСѓСЂР°С†РёРё РёСЃРїРѕР»РЅРёС‚РµР»СЊРЅРѕРіРѕ Р±Р»РѕРєР°
 void load_config( )
 {
     uchar i, n, byte_val;
     ushort word_val;
-    // Номер (адрес) блока
+    // РќРѕРјРµСЂ (Р°РґСЂРµСЃ) Р±Р»РѕРєР°
     byte_val = ee_read(0x00);
     if ( byte_val != 0xff )
         unit_number = byte_val;
@@ -233,12 +233,12 @@ void load_config( )
     n = 0;
     for ( i = 0; i < 8; ++i )
     {
-        // Использование защиты
+        // РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ Р·Р°С‰РёС‚С‹
         byte_val = ee_read(0x01 + n);
-        // Время разгона
+        // Р’СЂРµРјСЏ СЂР°Р·РіРѕРЅР°
         word_val = ((ushort)ee_read(0x03 + n) << 8) | ee_read(0x02 + n);
         
-        if ( byte_val == 0xff )  // Пропускаем пустые ячейки
+        if ( byte_val == 0xff )  // РџСЂРѕРїСѓСЃРєР°РµРј РїСѓСЃС‚С‹Рµ СЏС‡РµР№РєРё
             continue;
             
         motors[i].protect    = byte_val;
@@ -250,20 +250,20 @@ void load_config( )
     protected_motors = motor_get_protected();
 }
 
-// Запись байта
+// Р—Р°РїРёСЃСЊ Р±Р°Р№С‚Р°
 uchar write_config_byte( uchar addr, uchar dat )
 {
     return (ee_write(addr, dat) && (ee_read(addr) == dat));
 }
 
-// Запись 2-х байтов
+// Р—Р°РїРёСЃСЊ 2-С… Р±Р°Р№С‚РѕРІ
 uchar write_config_word( uchar addr, ushort dat )
 {
     return (ee_write(addr, dat & 0x00ff) && ee_write(addr + 1, (dat >> 8) & 0x00ff) && (ee_read(addr) == (dat & 0x00ff)) && (ee_read(addr + 1) == ((dat >> 8) & 0x00ff)));
 }
 
 
-// Восстановление защиты после КЗ на линии питания датчиков
+// Р’РѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ Р·Р°С‰РёС‚С‹ РїРѕСЃР»Рµ РљР— РЅР° Р»РёРЅРёРё РїРёС‚Р°РЅРёСЏ РґР°С‚С‡РёРєРѕРІ
 void protect_restore( )
 {
     SENSORS_PWR_RESTORE_PIN = 1;
@@ -272,33 +272,33 @@ void protect_restore( )
 }
 
 
-// Выполнение принятых команд
+// Р’С‹РїРѕР»РЅРµРЅРёРµ РїСЂРёРЅСЏС‚С‹С… РєРѕРјР°РЅРґ
 void exec_commands( )
 {
-    uchar buff[5];                                                              // Приемный буфер
+    uchar buff[5];                                                              // РџСЂРёРµРјРЅС‹Р№ Р±СѓС„РµСЂ
 
-    while ( 1 )                                                                 // Читает из приемопередатчика, пока есть данные
+    while ( 1 )                                                                 // Р§РёС‚Р°РµС‚ РёР· РїСЂРёРµРјРѕРїРµСЂРµРґР°С‚С‡РёРєР°, РїРѕРєР° РµСЃС‚СЊ РґР°РЅРЅС‹Рµ
     {
         delay_ms(1);
         memset(buff, 0, 5);
-        if ( transceiver_recv(buff) )                                           // Есть данные
+        if ( transceiver_recv(buff) )                                           // Р•СЃС‚СЊ РґР°РЅРЅС‹Рµ
         {
-            is_connected = TRUE;                                                // Хотябы одна команда от сервера была принята
+            is_connected = TRUE;                                                // РҐРѕС‚СЏР±С‹ РѕРґРЅР° РєРѕРјР°РЅРґР° РѕС‚ СЃРµСЂРІРµСЂР° Р±С‹Р»Р° РїСЂРёРЅСЏС‚Р°
             
-            switch ( buff[1] )                                                  // Команда
+            switch ( buff[1] )                                                  // РљРѕРјР°РЅРґР°
             {
-                // Передача информации о блоке
+                // РџРµСЂРµРґР°С‡Р° РёРЅС„РѕСЂРјР°С†РёРё Рѕ Р±Р»РѕРєРµ
                 /*case NET_CMD_UNIT_INFO:
                     send_motor_info(buff[0]);
                     break; */
                     
-                // Запрос информации
+                // Р—Р°РїСЂРѕСЃ РёРЅС„РѕСЂРјР°С†РёРё
                 case NET_CMD_REQUERY:
                     LED_PIN = ~LED_PIN;
                     changes = TRUE;
                     break;
                 
-                // Установка состояния двигателя (вкл/выкл)
+                // РЈСЃС‚Р°РЅРѕРІРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ РґРІРёРіР°С‚РµР»СЏ (РІРєР»/РІС‹РєР»)
                 case NET_CMD_SET_MOTOR_STATE:
                     if ( buff[2] )
                         motor_start(buff[3] - 1);
@@ -306,7 +306,7 @@ void exec_commands( )
                         motor_stop(buff[3] - 1, FALSE);
                     break;
                     
-                // Попытка восстановления защиты
+                // РџРѕРїС‹С‚РєР° РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ Р·Р°С‰РёС‚С‹
                 case NET_CMD_RESTORE_PROTECT:
                     protect_restore();
                     break;
@@ -316,15 +316,15 @@ void exec_commands( )
         }
         else
         {
-            break;  // Данных больше нет
+            break;  // Р”Р°РЅРЅС‹С… Р±РѕР»СЊС€Рµ РЅРµС‚
         }
     }
     
     delay_ms(100);                                                              // ???
 }
 
-// Чтение состояний датчиков
-// Возвращаемое значение: 1 - есть изменения, 0 - нет изменений
+// Р§С‚РµРЅРёРµ СЃРѕСЃС‚РѕСЏРЅРёР№ РґР°С‚С‡РёРєРѕРІ
+// Р’РѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ: 1 - РµСЃС‚СЊ РёР·РјРµРЅРµРЅРёСЏ, 0 - РЅРµС‚ РёР·РјРµРЅРµРЅРёР№
 char sensors_read( ulong *state )
 {
     ulong st;
@@ -333,7 +333,7 @@ char sensors_read( ulong *state )
     
     st = hc165_read(24);
     
-    // Так как датчики распаяны не по порядку, изменяем порядок
+    // РўР°Рє РєР°Рє РґР°С‚С‡РёРєРё СЂР°СЃРїР°СЏРЅС‹ РЅРµ РїРѕ РїРѕСЂСЏРґРєСѓ, РёР·РјРµРЅСЏРµРј РїРѕСЂСЏРґРѕРє
     curr_sensors_state = 0;
     if ( st & 0b000000000000000000100000 ) curr_sensors_state |= 0b000000000000000000000001;
     if ( st & 0b000000000000000001000000 ) curr_sensors_state |= 0b000000000000000000000010;
@@ -360,15 +360,15 @@ char sensors_read( ulong *state )
     if ( st & 0b000000010000000000000000 ) curr_sensors_state |= 0b010000000000000000000000;
     if ( st & 0b000000000000000000010000 ) curr_sensors_state |= 0b100000000000000000000000;
     
-    // Запрашиваем состоние защиты двигателей
+    // Р—Р°РїСЂР°С€РёРІР°РµРј СЃРѕСЃС‚РѕРЅРёРµ Р·Р°С‰РёС‚С‹ РґРІРёРіР°С‚РµР»РµР№
     for ( i = 0; i < protected_motors; ++i )
-        motors[i].sensor_state = (curr_sensors_state & (0x00400000 >> i)) ? 0 : 1;    // 0x00400000 - 23-й байт
+        motors[i].sensor_state = (curr_sensors_state & (0x00400000 >> i)) ? 0 : 1;    // 0x00400000 - 23-Р№ Р±Р°Р№С‚
         //motors[i].sensor_state = (curr_sensors_state & (~protected_mask[i + 1])) ? 0 : 1;
 
-    // не используем датчики задействованные под защиту двигателей
+    // РЅРµ РёСЃРїРѕР»СЊР·СѓРµРј РґР°С‚С‡РёРєРё Р·Р°РґРµР№СЃС‚РІРѕРІР°РЅРЅС‹Рµ РїРѕРґ Р·Р°С‰РёС‚Сѓ РґРІРёРіР°С‚РµР»РµР№
     curr_sensors_state &= protected_mask[protected_motors];
 
-    // Состояние изменилось
+    // РЎРѕСЃС‚РѕСЏРЅРёРµ РёР·РјРµРЅРёР»РѕСЃСЊ
     if ( curr_sensors_state != prev_sensors_state )
     {
         *state = curr_sensors_state;
@@ -381,7 +381,7 @@ char sensors_read( ulong *state )
     return res;
 }
 
-// Битовая маска состояния активности защиты
+// Р‘РёС‚РѕРІР°СЏ РјР°СЃРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ Р°РєС‚РёРІРЅРѕСЃС‚Рё Р·Р°С‰РёС‚С‹
 char motor_get_protect_mask( char count )
 {
     switch ( count )
@@ -429,7 +429,7 @@ void interrupt()
         USBIF_bit = 0;
     }
 
-    // Прерывание таймера 1
+    // РџСЂРµСЂС‹РІР°РЅРёРµ С‚Р°Р№РјРµСЂР° 1
     if ( TMR1IF_bit )
     {
         TMR1IF_bit = 0;
@@ -440,12 +440,12 @@ void interrupt()
     }
 }
 
-// Обмен данными с ПК
+// РћР±РјРµРЅ РґР°РЅРЅС‹РјРё СЃ РџРљ
 void pc_data_exchange( )
 {
     if ( USB_PWR_PIN )
     {
-        if ( !usb_state_on )   // Подключен USB кабель, включаем USB HID
+        if ( !usb_state_on )   // РџРѕРґРєР»СЋС‡РµРЅ USB РєР°Р±РµР»СЊ, РІРєР»СЋС‡Р°РµРј USB HID
         {
             usb_on();
             usb_state_on = TRUE;
@@ -453,7 +453,7 @@ void pc_data_exchange( )
     }
     else
     {
-        if ( usb_state_on )    // Отключен USB кабель, выключаем USB HID
+        if ( usb_state_on )    // РћС‚РєР»СЋС‡РµРЅ USB РєР°Р±РµР»СЊ, РІС‹РєР»СЋС‡Р°РµРј USB HID
         {
             usb_off();
             usb_state_on = FALSE;
@@ -462,25 +462,25 @@ void pc_data_exchange( )
     
     if ( usb_state_on )
     {
-        if ( usb_read() )                                                       // Получили команду от ПК
+        if ( usb_read() )                                                       // РџРѕР»СѓС‡РёР»Рё РєРѕРјР°РЅРґСѓ РѕС‚ РџРљ
         {
             struct s_cmd_header *head = (struct s_cmd_header *)readbuff;
 
             switch ( head->name )
             {
-                // Чтение номера блока
+                // Р§С‚РµРЅРёРµ РЅРѕРјРµСЂР° Р±Р»РѕРєР°
                 case CMD_EU_GET_UNIT_NUMBER:
                 {
                     struct s_eu_unit_number *rd = (struct s_eu_unit_number *)readbuff;
                     struct s_eu_unit_number *wr = (struct s_eu_unit_number *)writebuff;
 
                     wr->cmd.name   = CMD_EU_GET_UNIT_NUMBER;
-                    wr->number     = unit_number;                               // Номер блока
+                    wr->number     = unit_number;                               // РќРѕРјРµСЂ Р±Р»РѕРєР°
                     wr->cmd.result = CMD_RESULT_OK;
                 }
                 break;
                 
-                // Запись номера блока
+                // Р—Р°РїРёСЃСЊ РЅРѕРјРµСЂР° Р±Р»РѕРєР°
                 case CMD_EU_SET_UNIT_NUMBER:
                 {
                     struct s_eu_unit_number *rd = (struct s_eu_unit_number *)readbuff;
@@ -492,49 +492,49 @@ void pc_data_exchange( )
                     {
                         if ( write_config_byte(0x00, rd->number) )
                         {
-                            unit_number    = rd->number;                            // Номер блока
-                            wr->cmd.result = CMD_RESULT_OK;                         // Успешно
-                            reboot_needed  = TRUE;                                  // Требуется перезагрузка
+                            unit_number    = rd->number;                            // РќРѕРјРµСЂ Р±Р»РѕРєР°
+                            wr->cmd.result = CMD_RESULT_OK;                         // РЈСЃРїРµС€РЅРѕ
+                            reboot_needed  = TRUE;                                  // РўСЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµР·Р°РіСЂСѓР·РєР°
                         }
                         else
                         {
-                            wr->cmd.result = CMD_RESULT_EEPROM_WRITE_FAIL;          // Ошибка при записи EEPROM
+                            wr->cmd.result = CMD_RESULT_EEPROM_WRITE_FAIL;          // РћС€РёР±РєР° РїСЂРё Р·Р°РїРёСЃРё EEPROM
                         }
                     }
                     else
                     {
-                        wr->cmd.result = CMD_RESULT_BAD_INDEX;                       // Некорректный номер блока
+                        wr->cmd.result = CMD_RESULT_BAD_INDEX;                       // РќРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ РЅРѕРјРµСЂ Р±Р»РѕРєР°
                     }
                 }
                 break;
                 
-                // Чтение состояния датчиков
+                // Р§С‚РµРЅРёРµ СЃРѕСЃС‚РѕСЏРЅРёСЏ РґР°С‚С‡РёРєРѕРІ
                 case CMD_EU_GET_SENSORS_STATE:
                 {
                     struct s_eu_sensors_state *rd = (struct s_eu_sensors_state *)readbuff;
                     struct s_eu_sensors_state *wr = (struct s_eu_sensors_state *)writebuff;
 
                     wr->cmd.name   = CMD_EU_GET_SENSORS_STATE;
-                    wr->count      = SENSORS_COUNT - protected_motors;          // Количество доступных датчиков
-                    wr->state      = sensors_state;                             // Состояние датчиков
+                    wr->count      = SENSORS_COUNT - protected_motors;          // РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕСЃС‚СѓРїРЅС‹С… РґР°С‚С‡РёРєРѕРІ
+                    wr->state      = sensors_state;                             // РЎРѕСЃС‚РѕСЏРЅРёРµ РґР°С‚С‡РёРєРѕРІ
                     wr->cmd.result = CMD_RESULT_OK;
                 }
                 break;
                 
-                // Чтение состояния двигателей
+                // Р§С‚РµРЅРёРµ СЃРѕСЃС‚РѕСЏРЅРёСЏ РґРІРёРіР°С‚РµР»РµР№
                 case CMD_EU_GET_MOTORS_STATE:
                 {
                     struct s_eu_motors_state *rd = (struct s_eu_motors_state *)readbuff;
                     struct s_eu_motors_state *wr = (struct s_eu_motors_state *)writebuff;
 
                     wr->cmd.name   = CMD_EU_GET_MOTORS_STATE;
-                    wr->state      = (char)(motors_state & 0x000000ff);         // Состояние двигателей (вкл/выкл)
-                    wr->protect    = motor_get_protect_mask(protected_motors);  // Состоние защиты (используется/не используется)
+                    wr->state      = (char)(motors_state & 0x000000ff);         // РЎРѕСЃС‚РѕСЏРЅРёРµ РґРІРёРіР°С‚РµР»РµР№ (РІРєР»/РІС‹РєР»)
+                    wr->protect    = motor_get_protect_mask(protected_motors);  // РЎРѕСЃС‚РѕРЅРёРµ Р·Р°С‰РёС‚С‹ (РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ/РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ)
                     wr->cmd.result = CMD_RESULT_OK;
                 }
                 break;
                 
-                // Чтение конфигурации двигателя
+                // Р§С‚РµРЅРёРµ РєРѕРЅС„РёРіСѓСЂР°С†РёРё РґРІРёРіР°С‚РµР»СЏ
                 case CMD_EU_GET_MOTOR_CONFIG:
                 {
                     struct s_eu_motor_config *rd = (struct s_eu_motor_config *)readbuff;
@@ -544,9 +544,9 @@ void pc_data_exchange( )
                     if ( rd->number >= 0 && rd->number < 8 )
                     {
                         wr->number     = rd->number;
-                        wr->state      = (motors_state & (1 << rd->number)) ? TRUE : FALSE;   // Вкл/Выкл
-                        wr->protect    = motors[rd->number].protect;                          // Используется/Не используется
-                        wr->start_time = motors[rd->number].start_time / 10;                  // Время разгона
+                        wr->state      = (motors_state & (1 << rd->number)) ? TRUE : FALSE;   // Р’РєР»/Р’С‹РєР»
+                        wr->protect    = motors[rd->number].protect;                          // РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ/РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
+                        wr->start_time = motors[rd->number].start_time / 10;                  // Р’СЂРµРјСЏ СЂР°Р·РіРѕРЅР°
                         wr->cmd.result = CMD_RESULT_OK;
                     }
                     else
@@ -556,7 +556,7 @@ void pc_data_exchange( )
                 }
                 break;
                 
-                // Запись конфигурации двигателя
+                // Р—Р°РїРёСЃСЊ РєРѕРЅС„РёРіСѓСЂР°С†РёРё РґРІРёРіР°С‚РµР»СЏ
                 case CMD_EU_SET_MOTOR_CONFIG:
                 {
                     struct s_eu_motor_config *rd = (struct s_eu_motor_config *)readbuff;
@@ -567,7 +567,7 @@ void pc_data_exchange( )
                     {
                         char i, enable = TRUE;
 
-                        // Проверяем порядок
+                        // РџСЂРѕРІРµСЂСЏРµРј РїРѕСЂСЏРґРѕРє
                         if ( rd->protect )
                         {
                             for ( i = 0; i < rd->number; ++i )
@@ -581,17 +581,17 @@ void pc_data_exchange( )
                                     enable = FALSE;
                         }
                         
-                        // Порядок верный
+                        // РџРѕСЂСЏРґРѕРє РІРµСЂРЅС‹Р№
                         if ( enable )
                         {
-                            motor_stop(rd->number, FALSE);                       // Останавливаем двигатель
+                            motor_stop(rd->number, FALSE);                       // РћСЃС‚Р°РЅР°РІР»РёРІР°РµРј РґРІРёРіР°С‚РµР»СЊ
                             
                             if ( write_config_byte(0x01 + (rd->number * 3), rd->protect) && write_config_word(0x02 + (rd->number * 3), rd->start_time * 10) )
                             {
-                                motors[rd->number].protect = rd->protect;            // Защита
-                                motors[rd->number].start_time = rd->start_time * 10; // Время разгона
+                                motors[rd->number].protect = rd->protect;            // Р—Р°С‰РёС‚Р°
+                                motors[rd->number].start_time = rd->start_time * 10; // Р’СЂРµРјСЏ СЂР°Р·РіРѕРЅР°
 
-                                protected_motors = motor_get_protected();            // Устанавливаем количество контролируемых двигателей
+                                protected_motors = motor_get_protected();            // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРЅС‚СЂРѕР»РёСЂСѓРµРјС‹С… РґРІРёРіР°С‚РµР»РµР№
                             
                                 wr->cmd.result = CMD_RESULT_OK;
                             }
@@ -612,7 +612,7 @@ void pc_data_exchange( )
                 }
                 break;
                 
-                // Получение состояния двигателя
+                // РџРѕР»СѓС‡РµРЅРёРµ СЃРѕСЃС‚РѕСЏРЅРёСЏ РґРІРёРіР°С‚РµР»СЏ
                 case CMD_EU_GET_MOTOR_STATE:
                 {
                     struct s_eu_motor_state *rd = (struct s_eu_motor_state *)readbuff;
@@ -621,7 +621,7 @@ void pc_data_exchange( )
                     wr->cmd.name = CMD_EU_GET_MOTOR_STATE;
                     if ( rd->number >= 0 && rd->number < 8 )
                     {
-                        wr->state = (motors_state & (1 << rd->number)) ? TRUE : FALSE;  // Состояние двигателя
+                        wr->state = (motors_state & (1 << rd->number)) ? TRUE : FALSE;  // РЎРѕСЃС‚РѕСЏРЅРёРµ РґРІРёРіР°С‚РµР»СЏ
                         wr->cmd.result = CMD_RESULT_OK;
                     }
                     else
@@ -631,7 +631,7 @@ void pc_data_exchange( )
                 }
                 break;
                 
-                // Установка состояния двигателя
+                // РЈСЃС‚Р°РЅРѕРІРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ РґРІРёРіР°С‚РµР»СЏ
                 case CMD_EU_SET_MOTOR_STATE:
                 {
                     struct s_eu_motor_state *rd = (struct s_eu_motor_state *)readbuff;
@@ -641,9 +641,9 @@ void pc_data_exchange( )
                     if ( rd->number >= 0 && rd->number < 8 )
                     {
                         if ( rd->state )
-                            motor_start(rd->number);                            // Запуск
+                            motor_start(rd->number);                            // Р—Р°РїСѓСЃРє
                         else
-                            motor_stop(rd->number, FALSE);                      // Остановка
+                            motor_stop(rd->number, FALSE);                      // РћСЃС‚Р°РЅРѕРІРєР°
                             
                         wr->cmd.result = CMD_RESULT_OK;
                     }
@@ -654,19 +654,19 @@ void pc_data_exchange( )
                 }
                 break;
                 
-                // Состояние (В сети/Не в сети)
+                // РЎРѕСЃС‚РѕСЏРЅРёРµ (Р’ СЃРµС‚Рё/РќРµ РІ СЃРµС‚Рё)
                 case CMD_EU_GET_UNIT_STATE:
                 {
                     struct s_eu_unit_state *rd = (struct s_eu_unit_state *)readbuff;
                     struct s_eu_unit_state *wr = (struct s_eu_unit_state *)writebuff;
 
                     wr->cmd.name   = CMD_EU_GET_UNIT_STATE;
-                    wr->state      = is_connected;                              // Состояние блока
+                    wr->state      = is_connected;                              // РЎРѕСЃС‚РѕСЏРЅРёРµ Р±Р»РѕРєР°
                     wr->cmd.result = CMD_RESULT_OK;
                 }
                 break;
                 
-                // Загрузка конфигурации
+                // Р—Р°РіСЂСѓР·РєР° РєРѕРЅС„РёРіСѓСЂР°С†РёРё
                 case CMD_EU_LOAD_CONFIG:
                 {
                     struct s_eu_config_data *rd = (struct s_eu_config_data *)readbuff;
@@ -699,11 +699,11 @@ void pc_data_exchange( )
                             
                             if ( res )
                             {
-                                wr->cmd.result = CMD_RESULT_OK;                 // Успешно
-                                reboot_needed  = TRUE;                          // Требуется перезагрузка
+                                wr->cmd.result = CMD_RESULT_OK;                 // РЈСЃРїРµС€РЅРѕ
+                                reboot_needed  = TRUE;                          // РўСЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµР·Р°РіСЂСѓР·РєР°
                             }
                             else
-                                wr->cmd.result = CMD_RESULT_EEPROM_WRITE_FAIL;  // Ошибка при записи EEPROM
+                                wr->cmd.result = CMD_RESULT_EEPROM_WRITE_FAIL;  // РћС€РёР±РєР° РїСЂРё Р·Р°РїРёСЃРё EEPROM
                         }
                         else
                         {
@@ -713,7 +713,7 @@ void pc_data_exchange( )
                 }
                 break;
                 
-                // Сохранение конфигурации
+                // РЎРѕС…СЂР°РЅРµРЅРёРµ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
                 case CMD_EU_SAVE_CONFIG:
                 {
                     struct s_eu_config_data *rd = (struct s_eu_config_data *)readbuff;
@@ -739,13 +739,13 @@ void pc_data_exchange( )
                         p += 2;
                     }
                     
-                    wr->check_sum = crc16(wr->magic, 30);                       // Рассчитываем контрольную сумму, начиная с magic
+                    wr->check_sum = crc16(wr->magic, 30);                       // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РєРѕРЅС‚СЂРѕР»СЊРЅСѓСЋ СЃСѓРјРјСѓ, РЅР°С‡РёРЅР°СЏ СЃ magic
                     
                     wr->cmd.result = CMD_RESULT_OK;
                 }
                 break;
                 
-                // Неисзвестная команда
+                // РќРµРёСЃР·РІРµСЃС‚РЅР°СЏ РєРѕРјР°РЅРґР°
                 default:
                 {
                     struct s_cmd_header *wr = (struct s_cmd_header *)writebuff;
@@ -755,24 +755,24 @@ void pc_data_exchange( )
                 }
             }
             
-            usb_write();                                                        // Передача команды в ПК
+            usb_write();                                                        // РџРµСЂРµРґР°С‡Р° РєРѕРјР°РЅРґС‹ РІ РџРљ
         }
     }
 }
 
-// Контроль перезагрузки
+// РљРѕРЅС‚СЂРѕР»СЊ РїРµСЂРµР·Р°РіСЂСѓР·РєРё
 void reboot_check( )
 {
     if ( reboot_needed )
     {
-        // Отключаем USB
+        // РћС‚РєР»СЋС‡Р°РµРј USB
         if ( usb_state_on )
             usb_off();
         
-        // Подождем
+        // РџРѕРґРѕР¶РґРµРј
         delay_ms(1000);
         
-        // Сброс
+        // РЎР±СЂРѕСЃ
         __asm reset
     }
 }
@@ -780,52 +780,52 @@ void reboot_check( )
 
 void main()
 {
-    delay_ms(1000);                                                             // Ждем инициализации остальных компонентов
+    delay_ms(1000);                                                             // Р–РґРµРј РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РѕСЃС‚Р°Р»СЊРЅС‹С… РєРѕРјРїРѕРЅРµРЅС‚РѕРІ
     
-    init();                                                                     // Общая инициализация
+    init();                                                                     // РћР±С‰Р°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
     
-    transceiver_init();                                                         // Приемопередатчик
+    transceiver_init();                                                         // РџСЂРёРµРјРѕРїРµСЂРµРґР°С‚С‡РёРє
     
     hc165_init();                                                               // HC165
     
-    motor_init();                                                               // Двигатели
+    motor_init();                                                               // Р”РІРёРіР°С‚РµР»Рё
     
-    load_config();                                                              // Загрузка конфигурации
+    load_config();                                                              // Р—Р°РіСЂСѓР·РєР° РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     
     timer1_init();
     
-    net_init(5);                                                                // Сеть
+    net_init(5);                                                                // РЎРµС‚СЊ
     
-    net_set_params(unit_number, 20);                                            // Установка параметров приемопередатчика
+    net_set_params(unit_number, 20);                                            // РЈСЃС‚Р°РЅРѕРІРєР° РїР°СЂР°РјРµС‚СЂРѕРІ РїСЂРёРµРјРѕРїРµСЂРµРґР°С‚С‡РёРєР°
     
-    // Разрешаем глобальные и перефирийные прерывания
+    // Р Р°Р·СЂРµС€Р°РµРј РіР»РѕР±Р°Р»СЊРЅС‹Рµ Рё РїРµСЂРµС„РёСЂРёР№РЅС‹Рµ РїСЂРµСЂС‹РІР°РЅРёСЏ
     INTCON.GIE  = 1;
     INTCON.PEIE = 1;
 
     while ( TRUE )
     {
-        // Выполняем принятые команды
+        // Р’С‹РїРѕР»РЅСЏРµРј РїСЂРёРЅСЏС‚С‹Рµ РєРѕРјР°РЅРґС‹
         exec_commands();
          
-        // Опрашиваем состояние двигателей и отправляем серверу
+        // РћРїСЂР°С€РёРІР°РµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РґРІРёРіР°С‚РµР»РµР№ Рё РѕС‚РїСЂР°РІР»СЏРµРј СЃРµСЂРІРµСЂСѓ
         if ( motor_read(&motors_state) || changes )
             if ( net_send(SERVER_ADDRESS, NET_CMD_MOTORS_STATE, (uchar *)&motors_state, 0) == 0 )
-                motor_reset_fail_state(); // Если команда о состоянии двигателей успешно отправлена, сбрасываем аварийное состояние двигателей
+                motor_reset_fail_state(); // Р•СЃР»Рё РєРѕРјР°РЅРґР° Рѕ СЃРѕСЃС‚РѕСЏРЅРёРё РґРІРёРіР°С‚РµР»РµР№ СѓСЃРїРµС€РЅРѕ РѕС‚РїСЂР°РІР»РµРЅР°, СЃР±СЂР°СЃС‹РІР°РµРј Р°РІР°СЂРёР№РЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РґРІРёРіР°С‚РµР»РµР№
          
-        // Опрашиваем состояние входов и отправляем серверу
+        // РћРїСЂР°С€РёРІР°РµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РІС…РѕРґРѕРІ Рё РѕС‚РїСЂР°РІР»СЏРµРј СЃРµСЂРІРµСЂСѓ
         if ( sensors_read(&sensors_state) || changes )
             net_send(SERVER_ADDRESS, NET_CMD_SENSORS_STATE, (uchar *)&sensors_state, 0);
         
-        // Контролируем датчики скорости двигателей
+        // РљРѕРЅС‚СЂРѕР»РёСЂСѓРµРј РґР°С‚С‡РёРєРё СЃРєРѕСЂРѕСЃС‚Рё РґРІРёРіР°С‚РµР»РµР№
         motor_protect_control();
         
-        // Обмен данным с ПК
+        // РћР±РјРµРЅ РґР°РЅРЅС‹Рј СЃ РџРљ
         pc_data_exchange();
         
-        // Изменения обработаны
+        // РР·РјРµРЅРµРЅРёСЏ РѕР±СЂР°Р±РѕС‚Р°РЅС‹
         changes = FALSE;
         
-        // Если reboot_needed = TRUE, будет выполнена перезагрузка
+        // Р•СЃР»Рё reboot_needed = TRUE, Р±СѓРґРµС‚ РІС‹РїРѕР»РЅРµРЅР° РїРµСЂРµР·Р°РіСЂСѓР·РєР°
         reboot_check();
     }
 }
