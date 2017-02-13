@@ -25,14 +25,18 @@ Count=0
 Count=0
 ActiveImageIndex=-1
 [OPENED_FILES]
-Count=7
+Count=11
 File0=exec_unit.c
-File1=..\..\common\net_commands.h
-File2=..\common\net.h
-File3=exec_unit.h
-File4=USBdsc.c
-File5=..\..\common\unit_data_exchange.h
-File6=..\common\transceiver.h
+File1=exec_unit.h
+File2=USBdsc.c
+File3=hc165.h
+File4=..\common\common.h
+File5=..\common\crc.h
+File6=..\common\types.h
+File7=..\common\usb.h
+File8=..\common\net.h
+File9=..\common\internal_eeprom.h
+File10=..\..\..\..\Mikroelektronika\mikroC PRO for PIC\Defs\P18F4550.c
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
@@ -40,27 +44,27 @@ Count=0
 [OTHER_FILES]
 Count=0
 [SEARCH_PATH]
-Count=5
+Count=3
 Path0=C:\Mikroelektronika\mikroC PRO for PIC\Defs\
 Path1=C:\Mikroelektronika\mikroC PRO for PIC\uses\P18\
-Path2=C:\projects\elevator\source\mc\exec_unit\
-Path3=C:\projects\elevator\source\common\
-Path4=C:\projects\elevator\source\mc\common\
+Path2=C:\Program Files\Git\smart_house\exec_unit\
 [HEADER_PATH]
-Count=3
-Path0=C:\projects\elevator\source\common\
-Path1=C:\projects\elevator\source\mc\exec_unit\
-Path2=C:\projects\elevator\source\mc\common\
+Count=2
+Path0=C:\Program Files\Git\smart_house\exec_unit\
+Path1=C:\Program Files\Git\smart_house\common\
 [HEADERS]
-Count=8
-File0=..\..\common\types.h
-File1=..\..\common\net_commands.h
-File2=hc165.h
-File3=..\..\common\unit_data_exchange.h
-File4=..\common\transceiver.h
-File5=exec_unit.h
-File6=..\common\internal_eeprom.h
-File7=..\common\crc.h
+Count=11
+File0=hc165.h
+File1=..\common\transceiver.h
+File2=exec_unit.h
+File3=..\common\internal_eeprom.h
+File4=..\common\crc.h
+File5=..\common\common.h
+File6=..\common\net.h
+File7=..\common\net_commands.h
+File8=..\common\types.h
+File9=..\common\unit_data_exchange.h
+File10=..\common\usb.h
 [PLDS]
 Count=0
 [Useses]

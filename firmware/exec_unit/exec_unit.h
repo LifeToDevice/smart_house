@@ -1,6 +1,6 @@
-#include "../../common/types.h"
-#include "../../common/unit_data_exchange.h"
-#include "../../common/net_commands.h"
+#include "../common/types.h"
+#include "../common/unit_data_exchange.h"
+#include "../common/net_commands.h"
 
 
 #define COMM_WR_PIN             RB7_bit                                         // Write enable

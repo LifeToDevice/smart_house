@@ -1,7 +1,7 @@
 #ifndef _HC165_H_
 #define _HC165_H_
 
-#include "../../common/types.h"
+#include "../common/types.h"
 
 // Инициализация HC165
 void hc165_init( )
@@ -22,7 +22,7 @@ ulong hc165_read( uchar bits_count )
     ulong val = 0;
 
     HC165_LOAD_PIN = 0;
-    delay_us(1);
+    Delay_us(1);
     HC165_LOAD_PIN = 1;
 
     for ( i = 0; i < bits_count; i++ )
@@ -32,9 +32,9 @@ ulong hc165_read( uchar bits_count )
             val |= 1;
 
         HC165_CLOCK_PIN = 0;
-        delay_us(1);
+        Delay_us(1);
         HC165_CLOCK_PIN = 1;
-        delay_us(1);
+        Delay_us(1);
     }
 
     return val;

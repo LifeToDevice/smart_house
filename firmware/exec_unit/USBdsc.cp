@@ -1,6 +1,6 @@
-#line 1 "C:/projects/elevator/source/mc/exec_unit/USBdsc.c"
-const unsigned int USB_VENDOR_ID = 0xABCD;
-const unsigned int USB_PRODUCT_ID = 0x0002;
+#line 1 "C:/Program Files/Git/smart_house/exec_unit/USBdsc.c"
+const unsigned int USB_VENDOR_ID = 0x1209;
+const unsigned int USB_PRODUCT_ID = 0x0001;
 const char USB_SELF_POWER = 0xC0;
 const char USB_MAX_POWER = 50;
 const char HID_INPUT_REPORT_BYTES = 64;
@@ -146,11 +146,11 @@ const struct{
 const struct{
  char bLength;
  char bDscType;
- unsigned int string[23];
+ unsigned int string[26];
 }strd3={
- 48,
+ 54,
  0x03,
- {'E','l','e','v','a','t','o','r',' ','e','x','e','c','u','t','i','v','e',' ','u','n','i','t'}
+ {'S','m','a','r','t',' ','H','o','u','s','e',' ','E','x','e','c','u','t','i','v','e',' ','U','n','i','t'}
  };
 
 

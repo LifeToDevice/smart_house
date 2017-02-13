@@ -20,7 +20,7 @@ _transceiver_init:
 	BCF         RB4_bit+0, BitPos(RB4_bit+0) 
 ;transceiver.h,15 :: 		COMM_DATA_READY_DIR = 1;      // COMM_DATA_READY - вход
 	BSF         TRISB3_bit+0, BitPos(TRISB3_bit+0) 
-;transceiver.h,17 :: 		delay_ms(50);
+;transceiver.h,17 :: 		Delay_ms(50);
 	MOVLW       2
 	MOVWF       R11, 0
 	MOVLW       69
@@ -131,7 +131,7 @@ L_transceiver_send10:
 L_transceiver_send11:
 ;transceiver.h,61 :: 		COMM_CLK_PIN = 1;
 	BSF         RB5_bit+0, BitPos(RB5_bit+0) 
-;transceiver.h,62 :: 		delay_us(PULSE_TIME);
+;transceiver.h,62 :: 		Delay_us(PULSE_TIME);
 	MOVLW       16
 	MOVWF       R13, 0
 L_transceiver_send12:
@@ -140,7 +140,7 @@ L_transceiver_send12:
 	NOP
 ;transceiver.h,63 :: 		COMM_CLK_PIN = 0;
 	BCF         RB5_bit+0, BitPos(RB5_bit+0) 
-;transceiver.h,64 :: 		delay_us(PULSE_TIME);   //?????
+;transceiver.h,64 :: 		Delay_us(PULSE_TIME);   //?????
 	MOVLW       16
 	MOVWF       R13, 0
 L_transceiver_send13:
@@ -232,7 +232,7 @@ L_transceiver_send19:
 	GOTO        L_transceiver_send20
 ;transceiver.h,88 :: 		COMM_CLK_PIN = 1;
 	BSF         RB5_bit+0, BitPos(RB5_bit+0) 
-;transceiver.h,89 :: 		delay_us(PULSE_TIME);
+;transceiver.h,89 :: 		Delay_us(PULSE_TIME);
 	MOVLW       16
 	MOVWF       R13, 0
 L_transceiver_send22:
@@ -288,7 +288,7 @@ L_transceiver_send22:
 L_transceiver_send23:
 ;transceiver.h,95 :: 		COMM_CLK_PIN = 0;
 	BCF         RB5_bit+0, BitPos(RB5_bit+0) 
-;transceiver.h,96 :: 		delay_us(PULSE_TIME);
+;transceiver.h,96 :: 		Delay_us(PULSE_TIME);
 	MOVLW       16
 	MOVWF       R13, 0
 L_transceiver_send24:
@@ -355,7 +355,7 @@ _transceiver_recv:
 	BCF         RB6_bit+0, BitPos(RB6_bit+0) 
 ;transceiver.h,127 :: 		COMM_CLK_PIN = 0;
 	BCF         RB5_bit+0, BitPos(RB5_bit+0) 
-;transceiver.h,129 :: 		delay_ms(1); // Ждем готовности записи
+;transceiver.h,129 :: 		Delay_ms(1); // Ждем готовности записи
 	MOVLW       7
 	MOVWF       R12, 0
 	MOVLW       125
@@ -404,7 +404,7 @@ L_transceiver_recv30:
 	GOTO        L_transceiver_recv31
 ;transceiver.h,144 :: 		COMM_CLK_PIN = 1;
 	BSF         RB5_bit+0, BitPos(RB5_bit+0) 
-;transceiver.h,145 :: 		delay_us(PULSE_TIME);
+;transceiver.h,145 :: 		Delay_us(PULSE_TIME);
 	MOVLW       16
 	MOVWF       R13, 0
 L_transceiver_recv33:
@@ -460,7 +460,7 @@ L_transceiver_recv33:
 L_transceiver_recv34:
 ;transceiver.h,151 :: 		COMM_CLK_PIN = 0;
 	BCF         RB5_bit+0, BitPos(RB5_bit+0) 
-;transceiver.h,152 :: 		delay_us(PULSE_TIME);
+;transceiver.h,152 :: 		Delay_us(PULSE_TIME);
 	MOVLW       16
 	MOVWF       R13, 0
 L_transceiver_recv35:
@@ -520,8 +520,8 @@ L_end_net_init:
 
 _net_set_params:
 
-;net.h,13 :: 		unsigned char net_set_params( unsigned char addr, unsigned char ack_wait_time )
-;net.h,17 :: 		memset(res, 0, 5);
+;net.h,12 :: 		unsigned char net_set_params( unsigned char addr, unsigned char ack_wait_time )
+;net.h,16 :: 		memset(res, 0, 5);
 	MOVLW       net_set_params_res_L0+0
 	MOVWF       FARG_memset_p1+0 
 	MOVLW       hi_addr(net_set_params_res_L0+0)
@@ -532,20 +532,20 @@ _net_set_params:
 	MOVLW       0
 	MOVWF       FARG_memset_n+1 
 	CALL        _memset+0, 0
-;net.h,19 :: 		d[0] = 255;
+;net.h,18 :: 		d[0] = 255;
 	MOVLW       255
 	MOVWF       net_set_params_d_L0+0 
-;net.h,20 :: 		d[1] = addr;
+;net.h,19 :: 		d[1] = addr;
 	MOVF        FARG_net_set_params_addr+0, 0 
 	MOVWF       net_set_params_d_L0+1 
-;net.h,21 :: 		d[2] = ack_wait_time;
+;net.h,20 :: 		d[2] = ack_wait_time;
 	MOVF        FARG_net_set_params_ack_wait_time+0, 0 
 	MOVWF       net_set_params_d_L0+2 
-;net.h,22 :: 		d[3] = 0;
+;net.h,21 :: 		d[3] = 0;
 	CLRF        net_set_params_d_L0+3 
-;net.h,23 :: 		d[4] = 0;
+;net.h,22 :: 		d[4] = 0;
 	CLRF        net_set_params_d_L0+4 
-;net.h,25 :: 		if ( !transceiver_send(d, res) )
+;net.h,24 :: 		if ( !transceiver_send(d, res) )
 	MOVLW       net_set_params_d_L0+0
 	MOVWF       FARG_transceiver_send_cmd+0 
 	MOVLW       hi_addr(net_set_params_d_L0+0)
@@ -558,12 +558,12 @@ _net_set_params:
 	MOVF        R0, 1 
 	BTFSS       STATUS+0, 2 
 	GOTO        L_net_set_params36
-;net.h,26 :: 		return 1;
+;net.h,25 :: 		return 1;
 	MOVLW       1
 	MOVWF       R0 
 	GOTO        L_end_net_set_params
 L_net_set_params36:
-;net.h,28 :: 		return memcmp(d, res, 5);
+;net.h,27 :: 		return memcmp(d, res, 5);
 	MOVLW       net_set_params_d_L0+0
 	MOVWF       FARG_memcmp_s1+0 
 	MOVLW       hi_addr(net_set_params_d_L0+0)
@@ -577,15 +577,15 @@ L_net_set_params36:
 	MOVLW       0
 	MOVWF       FARG_memcmp_n+1 
 	CALL        _memcmp+0, 0
-;net.h,29 :: 		}
+;net.h,28 :: 		}
 L_end_net_set_params:
 	RETURN      0
 ; end of _net_set_params
 
 __net_send:
 
-;net.h,36 :: 		unsigned char _net_send( unsigned char addr, unsigned char cmd, unsigned char *dat )
-;net.h,41 :: 		memset(res, 0, 5);
+;net.h,35 :: 		unsigned char _net_send( unsigned char addr, unsigned char cmd, unsigned char *dat )
+;net.h,40 :: 		memset(res, 0, 5);
 	MOVLW       _net_send_res_L0+0
 	MOVWF       FARG_memset_p1+0 
 	MOVLW       hi_addr(_net_send_res_L0+0)
@@ -596,24 +596,24 @@ __net_send:
 	MOVLW       0
 	MOVWF       FARG_memset_n+1 
 	CALL        _memset+0, 0
-;net.h,43 :: 		d[0] = addr;  // адрес
+;net.h,42 :: 		d[0] = addr;  // адрес
 	MOVF        FARG__net_send_addr+0, 0 
 	MOVWF       _net_send_d_L0+0 
-;net.h,44 :: 		d[1] = cmd;   // команда
+;net.h,43 :: 		d[1] = cmd;   // команда
 	MOVF        FARG__net_send_cmd+0, 0 
 	MOVWF       _net_send_d_L0+1 
-;net.h,45 :: 		d[2] = 0;     // Данные (байт 1)
+;net.h,44 :: 		d[2] = 0;     // Данные (байт 1)
 	CLRF        _net_send_d_L0+2 
-;net.h,46 :: 		d[3] = 0;     // Данные (байт 2)
+;net.h,45 :: 		d[3] = 0;     // Данные (байт 2)
 	CLRF        _net_send_d_L0+3 
-;net.h,47 :: 		d[4] = 0;     // Данные (байт 3)
+;net.h,46 :: 		d[4] = 0;     // Данные (байт 3)
 	CLRF        _net_send_d_L0+4 
-;net.h,49 :: 		if ( dat )    // Если с командой передаются данные
+;net.h,48 :: 		if ( dat )    // Если с командой передаются данные
 	MOVF        FARG__net_send_dat+0, 0 
 	IORWF       FARG__net_send_dat+1, 0 
 	BTFSC       STATUS+0, 2 
 	GOTO        L__net_send37
-;net.h,50 :: 		memcpy(&d[2], dat, 3);
+;net.h,49 :: 		memcpy(&d[2], dat, 3);
 	MOVLW       _net_send_d_L0+2
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_net_send_d_L0+2)
@@ -628,7 +628,7 @@ __net_send:
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
 L__net_send37:
-;net.h,52 :: 		if ( !transceiver_send(d, res) )
+;net.h,51 :: 		if ( !transceiver_send(d, res) )
 	MOVLW       _net_send_d_L0+0
 	MOVWF       FARG_transceiver_send_cmd+0 
 	MOVLW       hi_addr(_net_send_d_L0+0)
@@ -641,12 +641,12 @@ L__net_send37:
 	MOVF        R0, 1 
 	BTFSS       STATUS+0, 2 
 	GOTO        L__net_send38
-;net.h,53 :: 		return 1;  // Линия занята
+;net.h,52 :: 		return 1;  // Линия занята
 	MOVLW       1
 	MOVWF       R0 
 	GOTO        L_end__net_send
 L__net_send38:
-;net.h,55 :: 		return !memcmp(d, res, 5) ? 0 : 2;
+;net.h,54 :: 		return !memcmp(d, res, 5) ? 0 : 2;
 	MOVLW       _net_send_d_L0+0
 	MOVWF       FARG_memcmp_s1+0 
 	MOVLW       hi_addr(_net_send_d_L0+0)
@@ -672,24 +672,24 @@ L__net_send39:
 L__net_send40:
 	MOVF        ?FLOC____net_sendT75+0, 0 
 	MOVWF       R0 
-;net.h,56 :: 		}
+;net.h,55 :: 		}
 L_end__net_send:
 	RETURN      0
 ; end of __net_send
 
 _net_send:
 
-;net.h,64 :: 		unsigned char net_send( unsigned char addr, unsigned char cmd, unsigned char *dat, unsigned char attempts )
-;net.h,68 :: 		if ( attempts == 0 )
+;net.h,63 :: 		unsigned char net_send( unsigned char addr, unsigned char cmd, unsigned char *dat, unsigned char attempts )
+;net.h,67 :: 		if ( attempts == 0 )
 	MOVF        FARG_net_send_attempts+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
 	GOTO        L_net_send41
-;net.h,69 :: 		attempts = net_send_attempts;
+;net.h,68 :: 		attempts = net_send_attempts;
 	MOVF        exec_unit_net_send_attempts+0, 0 
 	MOVWF       FARG_net_send_attempts+0 
 L_net_send41:
-;net.h,71 :: 		while ( attempts-- )
+;net.h,70 :: 		while ( attempts-- )
 L_net_send42:
 	MOVF        FARG_net_send_attempts+0, 0 
 	MOVWF       R0 
@@ -697,7 +697,7 @@ L_net_send42:
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_net_send43
-;net.h,73 :: 		res = _net_send(addr, cmd, dat);
+;net.h,72 :: 		res = _net_send(addr, cmd, dat);
 	MOVF        FARG_net_send_addr+0, 0 
 	MOVWF       FARG__net_send_addr+0 
 	MOVF        FARG_net_send_cmd+0, 0 
@@ -709,20 +709,20 @@ L_net_send42:
 	CALL        __net_send+0, 0
 	MOVF        R0, 0 
 	MOVWF       net_send_res_L0+0 
-;net.h,74 :: 		if ( res == 0 )
+;net.h,73 :: 		if ( res == 0 )
 	MOVF        R0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
 	GOTO        L_net_send44
-;net.h,75 :: 		return 0;
+;net.h,74 :: 		return 0;
 	CLRF        R0 
 	GOTO        L_end_net_send
 L_net_send44:
-;net.h,77 :: 		if ( attempts )
+;net.h,76 :: 		if ( attempts )
 	MOVF        FARG_net_send_attempts+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_net_send45
-;net.h,78 :: 		delay_ms(100); // подождем
+;net.h,77 :: 		Delay_ms(100); // подождем
 	MOVLW       3
 	MOVWF       R11, 0
 	MOVLW       138
@@ -739,13 +739,13 @@ L_net_send46:
 	NOP
 	NOP
 L_net_send45:
-;net.h,79 :: 		}
+;net.h,78 :: 		}
 	GOTO        L_net_send42
 L_net_send43:
-;net.h,81 :: 		return res;
+;net.h,80 :: 		return res;
 	MOVF        net_send_res_L0+0, 0 
 	MOVWF       R0 
-;net.h,82 :: 		}
+;net.h,81 :: 		}
 L_end_net_send:
 	RETURN      0
 ; end of _net_send
@@ -778,7 +778,7 @@ _hc165_read:
 	CLRF        hc165_read_val_L0+3 
 ;hc165.h,24 :: 		HC165_LOAD_PIN = 0;
 	BCF         RD7_bit+0, BitPos(RD7_bit+0) 
-;hc165.h,25 :: 		delay_us(1);
+;hc165.h,25 :: 		Delay_us(1);
 	NOP
 	NOP
 	NOP
@@ -807,7 +807,7 @@ L_hc165_read47:
 L_hc165_read50:
 ;hc165.h,34 :: 		HC165_CLOCK_PIN = 0;
 	BCF         RD6_bit+0, BitPos(RD6_bit+0) 
-;hc165.h,35 :: 		delay_us(1);
+;hc165.h,35 :: 		Delay_us(1);
 	NOP
 	NOP
 	NOP
@@ -815,7 +815,7 @@ L_hc165_read50:
 	NOP
 ;hc165.h,36 :: 		HC165_CLOCK_PIN = 1;
 	BSF         RD6_bit+0, BitPos(RD6_bit+0) 
-;hc165.h,37 :: 		delay_us(1);
+;hc165.h,37 :: 		Delay_us(1);
 	NOP
 	NOP
 	NOP
@@ -923,7 +923,7 @@ L_end_ee_read:
 _ee_write:
 
 ;internal_eeprom.h,13 :: 		unsigned char ee_write( unsigned char addr, unsigned char val )
-;internal_eeprom.h,15 :: 		char int_state = GIE_Bit;                                                   // Запоминаем состояние прерываний
+;internal_eeprom.h,15 :: 		char int_state = GIE_bit;                                                   // Запоминаем состояние прерываний
 	MOVLW       0
 	BTFSC       GIE_bit+0, BitPos(GIE_bit+0) 
 	MOVLW       1
@@ -946,7 +946,7 @@ L_ee_write54:
 	BCF         CFGS_bit+0, BitPos(CFGS_bit+0) 
 ;internal_eeprom.h,21 :: 		WREN_bit  = 1;                                                              // Разрешаем запись
 	BSF         WREN_bit+0, BitPos(WREN_bit+0) 
-;internal_eeprom.h,22 :: 		GIE_Bit   = 0;                                                              // Запрещаем прерывания
+;internal_eeprom.h,22 :: 		GIE_bit   = 0;                                                              // Запрещаем прерывания
 	BCF         GIE_bit+0, BitPos(GIE_bit+0) 
 ;internal_eeprom.h,23 :: 		EECON2    = 0x55;                                                           // Устанавливаем 0x55
 	MOVLW       85
@@ -956,7 +956,7 @@ L_ee_write54:
 	MOVWF       EECON2+0 
 ;internal_eeprom.h,25 :: 		WR_bit    = 1;                                                              // Запуск записи
 	BSF         WR_bit+0, BitPos(WR_bit+0) 
-;internal_eeprom.h,26 :: 		GIE_Bit   = int_state;                                                      // Восстанавливаем состояние прерывания
+;internal_eeprom.h,26 :: 		GIE_bit   = int_state;                                                      // Восстанавливаем состояние прерывания
 	BTFSC       R2, 0 
 	GOTO        L__ee_write295
 	BCF         GIE_bit+0, BitPos(GIE_bit+0) 
@@ -989,11 +989,11 @@ L_end_ee_write:
 
 _crc8:
 
-;crc.h,13 :: 		unsigned char crc8( uchar *block, uchar len )
-;crc.h,15 :: 		uchar crc = 0xFF;
+;crc.h,11 :: 		unsigned char crc8( uchar *block, uchar len )
+;crc.h,13 :: 		uchar crc = 0xFF;
 	MOVLW       255
 	MOVWF       crc8_crc_L0+0 
-;crc.h,18 :: 		while ( len-- )
+;crc.h,16 :: 		while ( len-- )
 L_crc857:
 	MOVF        FARG_crc8_len+0, 0 
 	MOVWF       R0 
@@ -1001,21 +1001,21 @@ L_crc857:
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_crc858
-;crc.h,20 :: 		crc ^= *block++;
+;crc.h,18 :: 		crc ^= *block++;
 	MOVFF       FARG_crc8_block+0, FSR2
 	MOVFF       FARG_crc8_block+1, FSR2H
 	MOVF        POSTINC2+0, 0 
 	XORWF       crc8_crc_L0+0, 1 
 	INFSNZ      FARG_crc8_block+0, 1 
 	INCF        FARG_crc8_block+1, 1 
-;crc.h,21 :: 		for ( i = 0; i < 8; i++ )
+;crc.h,19 :: 		for ( i = 0; i < 8; i++ )
 	CLRF        R3 
 L_crc859:
 	MOVLW       8
 	SUBWF       R3, 0 
 	BTFSC       STATUS+0, 0 
 	GOTO        L_crc860
-;crc.h,22 :: 		crc = crc & 0x80 ? (crc << 1) ^ 0x31 : crc << 1;
+;crc.h,20 :: 		crc = crc & 0x80 ? (crc << 1) ^ 0x31 : crc << 1;
 	BTFSS       crc8_crc_L0+0, 7 
 	GOTO        L_crc862
 	MOVF        crc8_crc_L0+0, 0 
@@ -1041,31 +1041,31 @@ L_crc862:
 L_crc863:
 	MOVF        R1, 0 
 	MOVWF       crc8_crc_L0+0 
-;crc.h,21 :: 		for ( i = 0; i < 8; i++ )
+;crc.h,19 :: 		for ( i = 0; i < 8; i++ )
 	INCF        R3, 1 
-;crc.h,22 :: 		crc = crc & 0x80 ? (crc << 1) ^ 0x31 : crc << 1;
+;crc.h,20 :: 		crc = crc & 0x80 ? (crc << 1) ^ 0x31 : crc << 1;
 	GOTO        L_crc859
 L_crc860:
-;crc.h,23 :: 		}
+;crc.h,21 :: 		}
 	GOTO        L_crc857
 L_crc858:
-;crc.h,25 :: 		return crc;
+;crc.h,23 :: 		return crc;
 	MOVF        crc8_crc_L0+0, 0 
 	MOVWF       R0 
-;crc.h,26 :: 		}
+;crc.h,24 :: 		}
 L_end_crc8:
 	RETURN      0
 ; end of _crc8
 
 _crc16:
 
-;crc.h,39 :: 		unsigned short crc16( uchar *block, ushort len )
-;crc.h,41 :: 		ushort crc = 0xFFFF;
+;crc.h,36 :: 		unsigned short crc16( uchar *block, ushort len )
+;crc.h,38 :: 		ushort crc = 0xFFFF;
 	MOVLW       255
 	MOVWF       crc16_crc_L0+0 
 	MOVLW       255
 	MOVWF       crc16_crc_L0+1 
-;crc.h,44 :: 		while ( len-- )
+;crc.h,41 :: 		while ( len-- )
 L_crc1664:
 	MOVF        FARG_crc16_len+0, 0 
 	MOVWF       R0 
@@ -1079,7 +1079,7 @@ L_crc1664:
 	IORWF       R1, 0 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_crc1665
-;crc.h,46 :: 		crc ^= *block++ << 8;
+;crc.h,43 :: 		crc ^= *block++ << 8;
 	MOVFF       FARG_crc16_block+0, FSR0
 	MOVFF       FARG_crc16_block+1, FSR0H
 	MOVF        POSTINC0+0, 0 
@@ -1093,14 +1093,14 @@ L_crc1664:
 	XORWF       crc16_crc_L0+1, 1 
 	INFSNZ      FARG_crc16_block+0, 1 
 	INCF        FARG_crc16_block+1, 1 
-;crc.h,47 :: 		for ( i = 0; i < 8; i++ )
+;crc.h,44 :: 		for ( i = 0; i < 8; i++ )
 	CLRF        R6 
 L_crc1666:
 	MOVLW       8
 	SUBWF       R6, 0 
 	BTFSC       STATUS+0, 0 
 	GOTO        L_crc1667
-;crc.h,48 :: 		crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
+;crc.h,45 :: 		crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
 	BTFSS       crc16_crc_L0+1, 7 
 	GOTO        L_crc1669
 	MOVF        crc16_crc_L0+0, 0 
@@ -1128,18 +1128,18 @@ L_crc1670:
 	MOVWF       crc16_crc_L0+0 
 	MOVF        R5, 0 
 	MOVWF       crc16_crc_L0+1 
-;crc.h,47 :: 		for ( i = 0; i < 8; i++ )
+;crc.h,44 :: 		for ( i = 0; i < 8; i++ )
 	INCF        R6, 1 
-;crc.h,48 :: 		crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
+;crc.h,45 :: 		crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
 	GOTO        L_crc1666
 L_crc1667:
-;crc.h,49 :: 		}
+;crc.h,46 :: 		}
 	GOTO        L_crc1664
 L_crc1665:
-;crc.h,50 :: 		return crc;
+;crc.h,47 :: 		return crc;
 	MOVF        crc16_crc_L0+0, 0 
 	MOVWF       R0 
-;crc.h,51 :: 		}
+;crc.h,48 :: 		}
 L_end_crc16:
 	RETURN      0
 ; end of _crc16
@@ -2364,7 +2364,7 @@ L_load_config113:
 	MOVWF       load_config_word_val_L0+1 
 	MOVLW       0
 	IORWF       load_config_word_val_L0+1, 1 
-;exec_unit.c,241 :: 		if ( byte_val == 0xff )  // Пропускаем пустые ячейки
+;exec_unit.c,241 :: 		if ( byte_val == 0xff )  // РџСЂРѕРїСѓСЃРєР°РµРј РїСѓСЃС‚С‹Рµ СЏС‡РµР№РєРё
 	MOVF        load_config_byte_val_L0+0, 0 
 	XORLW       255
 	BTFSS       STATUS+0, 2 
@@ -2563,7 +2563,7 @@ _protect_restore:
 ;exec_unit.c,267 :: 		void protect_restore( )
 ;exec_unit.c,269 :: 		SENSORS_PWR_RESTORE_PIN = 1;
 	BSF         RD1_bit+0, BitPos(RD1_bit+0) 
-;exec_unit.c,270 :: 		delay_ms(100);
+;exec_unit.c,270 :: 		Delay_ms(100);
 	MOVLW       3
 	MOVWF       R11, 0
 	MOVLW       138
@@ -2589,9 +2589,9 @@ L_end_protect_restore:
 _exec_commands:
 
 ;exec_unit.c,276 :: 		void exec_commands( )
-;exec_unit.c,280 :: 		while ( 1 )                                                                 // Читает из приемопередатчика, пока есть данные
+;exec_unit.c,280 :: 		while ( 1 )                                                                 // Р§РёС‚Р°РµС‚ РёР· РїСЂРёРµРјРѕРїРµСЂРµРґР°С‚С‡РёРєР°, РїРѕРєР° РµСЃС‚СЊ РґР°РЅРЅС‹Рµ
 L_exec_commands122:
-;exec_unit.c,282 :: 		delay_ms(1);
+;exec_unit.c,282 :: 		Delay_ms(1);
 	MOVLW       7
 	MOVWF       R12, 0
 	MOVLW       125
@@ -2612,7 +2612,7 @@ L_exec_commands124:
 	MOVLW       0
 	MOVWF       FARG_memset_n+1 
 	CALL        _memset+0, 0
-;exec_unit.c,284 :: 		if ( transceiver_recv(buff) )                                           // Есть данные
+;exec_unit.c,284 :: 		if ( transceiver_recv(buff) )                                           // Р•СЃС‚СЊ РґР°РЅРЅС‹Рµ
 	MOVLW       exec_commands_buff_L0+0
 	MOVWF       FARG_transceiver_recv_result+0 
 	MOVLW       hi_addr(exec_commands_buff_L0+0)
@@ -2621,10 +2621,10 @@ L_exec_commands124:
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_exec_commands125
-;exec_unit.c,286 :: 		is_connected = TRUE;                                                // Хотябы одна команда от сервера была принята
+;exec_unit.c,286 :: 		is_connected = TRUE;                                                // РҐРѕС‚СЏР±С‹ РѕРґРЅР° РєРѕРјР°РЅРґР° РѕС‚ СЃРµСЂРІРµСЂР° Р±С‹Р»Р° РїСЂРёРЅСЏС‚Р°
 	MOVLW       1
 	MOVWF       _is_connected+0 
-;exec_unit.c,288 :: 		switch ( buff[1] )                                                  // Команда
+;exec_unit.c,288 :: 		switch ( buff[1] )                                                  // РљРѕРјР°РЅРґР°
 	GOTO        L_exec_commands126
 ;exec_unit.c,296 :: 		case NET_CMD_REQUERY:
 L_exec_commands128:
@@ -2679,14 +2679,14 @@ L_exec_commands127:
 ;exec_unit.c,316 :: 		}
 	GOTO        L_exec_commands133
 L_exec_commands125:
-;exec_unit.c,319 :: 		break;  // Данных больше нет
+;exec_unit.c,319 :: 		break;  // Р”Р°РЅРЅС‹С… Р±РѕР»СЊС€Рµ РЅРµС‚
 	GOTO        L_exec_commands123
 ;exec_unit.c,320 :: 		}
 L_exec_commands133:
 ;exec_unit.c,321 :: 		}
 	GOTO        L_exec_commands122
 L_exec_commands123:
-;exec_unit.c,323 :: 		delay_ms(100);                                                              // ???
+;exec_unit.c,323 :: 		Delay_ms(100);                                                              // ???
 	MOVLW       3
 	MOVWF       R11, 0
 	MOVLW       138
@@ -2856,7 +2856,7 @@ L_sensors_read159:
 	SUBWF       sensors_read_i_L0+0, 0 
 	BTFSC       STATUS+0, 0 
 	GOTO        L_sensors_read160
-;exec_unit.c,365 :: 		motors[i].sensor_state = (curr_sensors_state & (0x00400000 >> i)) ? 0 : 1;    // 0x00400000 - 23-й байт
+;exec_unit.c,365 :: 		motors[i].sensor_state = (curr_sensors_state & (0x00400000 >> i)) ? 0 : 1;    // 0x00400000 - 23-Р№ Р±Р°Р№С‚
 	MOVLW       3
 	MOVWF       R2 
 	MOVF        sensors_read_i_L0+0, 0 
@@ -2931,7 +2931,7 @@ L_sensors_read163:
 	MOVWF       POSTINC1+0 
 ;exec_unit.c,364 :: 		for ( i = 0; i < protected_motors; ++i )
 	INCF        sensors_read_i_L0+0, 1 
-;exec_unit.c,365 :: 		motors[i].sensor_state = (curr_sensors_state & (0x00400000 >> i)) ? 0 : 1;    // 0x00400000 - 23-й байт
+;exec_unit.c,365 :: 		motors[i].sensor_state = (curr_sensors_state & (0x00400000 >> i)) ? 0 : 1;    // 0x00400000 - 23-Р№ Р±Р°Р№С‚
 	GOTO        L_sensors_read159
 L_sensors_read160:
 ;exec_unit.c,369 :: 		curr_sensors_state &= protected_mask[protected_motors];
@@ -3031,7 +3031,7 @@ L__sensors_read390:
 	MOVWF       sensors_read_res_L0+0 
 ;exec_unit.c,377 :: 		}
 L_sensors_read164:
-;exec_unit.c,379 :: 		delay_ms(50);
+;exec_unit.c,379 :: 		Delay_ms(50);
 	MOVLW       2
 	MOVWF       R11, 0
 	MOVLW       69
@@ -3212,7 +3212,7 @@ _pc_data_exchange:
 ;exec_unit.c,446 :: 		if ( USB_PWR_PIN )
 	BTFSS       RD2_bit+0, BitPos(RD2_bit+0) 
 	GOTO        L_pc_data_exchange178
-;exec_unit.c,448 :: 		if ( !usb_state_on )   // Подключен USB кабель, включаем USB HID
+;exec_unit.c,448 :: 		if ( !usb_state_on )   // РџРѕРґРєР»СЋС‡РµРЅ USB РєР°Р±РµР»СЊ, РІРєР»СЋС‡Р°РµРј USB HID
 	MOVF        _usb_state_on+0, 1 
 	BTFSS       STATUS+0, 2 
 	GOTO        L_pc_data_exchange179
@@ -3226,7 +3226,7 @@ L_pc_data_exchange179:
 ;exec_unit.c,453 :: 		}
 	GOTO        L_pc_data_exchange180
 L_pc_data_exchange178:
-;exec_unit.c,456 :: 		if ( usb_state_on )    // Отключен USB кабель, выключаем USB HID
+;exec_unit.c,456 :: 		if ( usb_state_on )    // РћС‚РєР»СЋС‡РµРЅ USB РєР°Р±РµР»СЊ, РІС‹РєР»СЋС‡Р°РµРј USB HID
 	MOVF        _usb_state_on+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_pc_data_exchange181
@@ -3242,7 +3242,7 @@ L_pc_data_exchange180:
 	MOVF        _usb_state_on+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_pc_data_exchange182
-;exec_unit.c,465 :: 		if ( usb_read() )                                                       // Получили команду от ПК
+;exec_unit.c,465 :: 		if ( usb_read() )                                                       // РџРѕР»СѓС‡РёР»Рё РєРѕРјР°РЅРґСѓ РѕС‚ РџРљ
 	CALL        _usb_read+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
@@ -3271,7 +3271,7 @@ L_pc_data_exchange186:
 	MOVFF       pc_data_exchange_wr_L4+1, FSR1H
 	MOVLW       1
 	MOVWF       POSTINC1+0 
-;exec_unit.c,478 :: 		wr->number     = unit_number;                               // Номер блока
+;exec_unit.c,478 :: 		wr->number     = unit_number;                               // РќРѕРјРµСЂ Р±Р»РѕРєР°
 	MOVLW       2
 	ADDWF       pc_data_exchange_wr_L4+0, 0 
 	MOVWF       FSR1 
@@ -3306,7 +3306,7 @@ L_pc_data_exchange187:
 	MOVFF       pc_data_exchange_wr_L4_L4+1, FSR1H
 	MOVLW       2
 	MOVWF       POSTINC1+0 
-;exec_unit.c,490 :: 		if ( rd->number >= 1 && rd->number <= 253 )
+;exec_unit.c,491 :: 		if ( rd->number >= 1 && rd->number <= 253 )
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -3328,7 +3328,7 @@ L_pc_data_exchange187:
 	BTFSS       STATUS+0, 0 
 	GOTO        L_pc_data_exchange190
 L__pc_data_exchange277:
-;exec_unit.c,492 :: 		if ( write_config_byte(0x00, rd->number) )
+;exec_unit.c,493 :: 		if ( write_config_byte(0x00, rd->number) )
 	CLRF        FARG_write_config_byte_addr+0 
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4+0, 0 
@@ -3342,7 +3342,7 @@ L__pc_data_exchange277:
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_pc_data_exchange191
-;exec_unit.c,494 :: 		unit_number    = rd->number;                            // Номер блока
+;exec_unit.c,495 :: 		unit_number    = rd->number;                            // РќРѕРјРµСЂ Р±Р»РѕРєР°
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -3351,7 +3351,7 @@ L__pc_data_exchange277:
 	MOVWF       FSR0H 
 	MOVF        POSTINC0+0, 0 
 	MOVWF       _unit_number+0 
-;exec_unit.c,495 :: 		wr->cmd.result = CMD_RESULT_OK;                         // Успешно
+;exec_unit.c,496 :: 		wr->cmd.result = CMD_RESULT_OK;                         // РЈСЃРїРµС€РЅРѕ
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -3359,13 +3359,13 @@ L__pc_data_exchange277:
 	ADDWFC      pc_data_exchange_wr_L4_L4+1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-;exec_unit.c,496 :: 		reboot_needed  = TRUE;                                  // Требуется перезагрузка
+;exec_unit.c,497 :: 		reboot_needed  = TRUE;                                  // РўСЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµР·Р°РіСЂСѓР·РєР°
 	MOVLW       1
 	MOVWF       _reboot_needed+0 
-;exec_unit.c,497 :: 		}
+;exec_unit.c,498 :: 		}
 	GOTO        L_pc_data_exchange192
 L_pc_data_exchange191:
-;exec_unit.c,500 :: 		wr->cmd.result = CMD_RESULT_EEPROM_WRITE_FAIL;          // Ошибка при записи EEPROM
+;exec_unit.c,501 :: 		wr->cmd.result = CMD_RESULT_EEPROM_WRITE_FAIL;          // РћС€РёР±РєР° РїСЂРё Р·Р°РїРёСЃРё EEPROM
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -3374,12 +3374,12 @@ L_pc_data_exchange191:
 	MOVWF       FSR1H 
 	MOVLW       6
 	MOVWF       POSTINC1+0 
-;exec_unit.c,501 :: 		}
-L_pc_data_exchange192:
 ;exec_unit.c,502 :: 		}
+L_pc_data_exchange192:
+;exec_unit.c,503 :: 		}
 	GOTO        L_pc_data_exchange193
 L_pc_data_exchange190:
-;exec_unit.c,505 :: 		wr->cmd.result = CMD_RESULT_BAD_INDEX;                       // Некорректный номер блока
+;exec_unit.c,506 :: 		wr->cmd.result = CMD_RESULT_BAD_INDEX;                       // РќРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ РЅРѕРјРµСЂ Р±Р»РѕРєР°
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -3388,24 +3388,24 @@ L_pc_data_exchange190:
 	MOVWF       FSR1H 
 	MOVLW       4
 	MOVWF       POSTINC1+0 
-;exec_unit.c,506 :: 		}
+;exec_unit.c,507 :: 		}
 L_pc_data_exchange193:
-;exec_unit.c,508 :: 		break;
+;exec_unit.c,509 :: 		break;
 	GOTO        L_pc_data_exchange185
-;exec_unit.c,511 :: 		case CMD_EU_GET_SENSORS_STATE:
+;exec_unit.c,512 :: 		case CMD_EU_GET_SENSORS_STATE:
 L_pc_data_exchange194:
-;exec_unit.c,513 :: 		struct s_eu_sensors_state *rd = (struct s_eu_sensors_state *)readbuff;
-;exec_unit.c,514 :: 		struct s_eu_sensors_state *wr = (struct s_eu_sensors_state *)writebuff;
+;exec_unit.c,514 :: 		struct s_eu_sensors_state *rd = (struct s_eu_sensors_state *)readbuff;
+;exec_unit.c,515 :: 		struct s_eu_sensors_state *wr = (struct s_eu_sensors_state *)writebuff;
 	MOVLW       _writebuff+0
 	MOVWF       pc_data_exchange_wr_L4_L4_L4+0 
 	MOVLW       hi_addr(_writebuff+0)
 	MOVWF       pc_data_exchange_wr_L4_L4_L4+1 
-;exec_unit.c,516 :: 		wr->cmd.name   = CMD_EU_GET_SENSORS_STATE;
+;exec_unit.c,517 :: 		wr->cmd.name   = CMD_EU_GET_SENSORS_STATE;
 	MOVFF       pc_data_exchange_wr_L4_L4_L4+0, FSR1
 	MOVFF       pc_data_exchange_wr_L4_L4_L4+1, FSR1H
 	MOVLW       3
 	MOVWF       POSTINC1+0 
-;exec_unit.c,517 :: 		wr->count      = SENSORS_COUNT - protected_motors;          // Количество доступных датчиков
+;exec_unit.c,518 :: 		wr->count      = SENSORS_COUNT - protected_motors;          // РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕСЃС‚СѓРїРЅС‹С… РґР°С‚С‡РёРєРѕРІ
 	MOVLW       2
 	ADDWF       pc_data_exchange_wr_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -3417,7 +3417,7 @@ L_pc_data_exchange194:
 	MOVWF       R0 
 	MOVF        R0, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,518 :: 		wr->state      = sensors_state;                             // Состояние датчиков
+;exec_unit.c,519 :: 		wr->state      = sensors_state;                             // РЎРѕСЃС‚РѕСЏРЅРёРµ РґР°С‚С‡РёРєРѕРІ
 	MOVLW       3
 	ADDWF       pc_data_exchange_wr_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -3432,7 +3432,7 @@ L_pc_data_exchange194:
 	MOVWF       POSTINC1+0 
 	MOVF        _sensors_state+3, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,519 :: 		wr->cmd.result = CMD_RESULT_OK;
+;exec_unit.c,520 :: 		wr->cmd.result = CMD_RESULT_OK;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -3440,22 +3440,22 @@ L_pc_data_exchange194:
 	ADDWFC      pc_data_exchange_wr_L4_L4_L4+1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-;exec_unit.c,521 :: 		break;
+;exec_unit.c,522 :: 		break;
 	GOTO        L_pc_data_exchange185
-;exec_unit.c,524 :: 		case CMD_EU_GET_MOTORS_STATE:
+;exec_unit.c,525 :: 		case CMD_EU_GET_MOTORS_STATE:
 L_pc_data_exchange195:
-;exec_unit.c,526 :: 		struct s_eu_motors_state *rd = (struct s_eu_motors_state *)readbuff;
-;exec_unit.c,527 :: 		struct s_eu_motors_state *wr = (struct s_eu_motors_state *)writebuff;
+;exec_unit.c,527 :: 		struct s_eu_motors_state *rd = (struct s_eu_motors_state *)readbuff;
+;exec_unit.c,528 :: 		struct s_eu_motors_state *wr = (struct s_eu_motors_state *)writebuff;
 	MOVLW       _writebuff+0
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_writebuff+0)
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4+1 
-;exec_unit.c,529 :: 		wr->cmd.name   = CMD_EU_GET_MOTORS_STATE;
+;exec_unit.c,530 :: 		wr->cmd.name   = CMD_EU_GET_MOTORS_STATE;
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4+0, FSR1
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4+1, FSR1H
 	MOVLW       4
 	MOVWF       POSTINC1+0 
-;exec_unit.c,530 :: 		wr->state      = (char)(motors_state & 0x000000ff);         // Состояние двигателей (вкл/выкл)
+;exec_unit.c,531 :: 		wr->state      = (char)(motors_state & 0x000000ff);         // РЎРѕСЃС‚РѕСЏРЅРёРµ РґРІРёРіР°С‚РµР»РµР№ (РІРєР»/РІС‹РєР»)
 	MOVLW       2
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -3467,7 +3467,7 @@ L_pc_data_exchange195:
 	MOVWF       R0 
 	MOVF        R0, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,531 :: 		wr->protect    = motor_get_protect_mask(protected_motors);  // Состоние защиты (используется/не используется)
+;exec_unit.c,532 :: 		wr->protect    = motor_get_protect_mask(protected_motors);  // РЎРѕСЃС‚РѕРЅРёРµ Р·Р°С‰РёС‚С‹ (РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ/РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ)
 	MOVLW       3
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4+0, 0 
 	MOVWF       FLOC__pc_data_exchange+0 
@@ -3481,7 +3481,7 @@ L_pc_data_exchange195:
 	MOVFF       FLOC__pc_data_exchange+1, FSR1H
 	MOVF        R0, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,532 :: 		wr->cmd.result = CMD_RESULT_OK;
+;exec_unit.c,533 :: 		wr->cmd.result = CMD_RESULT_OK;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -3489,11 +3489,11 @@ L_pc_data_exchange195:
 	ADDWFC      pc_data_exchange_wr_L4_L4_L4_L4+1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-;exec_unit.c,534 :: 		break;
+;exec_unit.c,535 :: 		break;
 	GOTO        L_pc_data_exchange185
-;exec_unit.c,537 :: 		case CMD_EU_GET_MOTOR_CONFIG:
+;exec_unit.c,538 :: 		case CMD_EU_GET_MOTOR_CONFIG:
 L_pc_data_exchange196:
-;exec_unit.c,539 :: 		struct s_eu_motor_config *rd = (struct s_eu_motor_config *)readbuff;
+;exec_unit.c,540 :: 		struct s_eu_motor_config *rd = (struct s_eu_motor_config *)readbuff;
 	MOVLW       _readbuff+0
 	MOVWF       pc_data_exchange_rd_L4_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_readbuff+0)
@@ -3502,12 +3502,12 @@ L_pc_data_exchange196:
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_writebuff+0)
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4+1 
-;exec_unit.c,542 :: 		wr->cmd.name   = CMD_EU_GET_MOTOR_CONFIG;
+;exec_unit.c,543 :: 		wr->cmd.name   = CMD_EU_GET_MOTOR_CONFIG;
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4+0, FSR1
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4+1, FSR1H
 	MOVLW       5
 	MOVWF       POSTINC1+0 
-;exec_unit.c,543 :: 		if ( rd->number >= 0 && rd->number < 8 )
+;exec_unit.c,544 :: 		if ( rd->number >= 0 && rd->number < 8 )
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -3529,7 +3529,7 @@ L_pc_data_exchange196:
 	BTFSC       STATUS+0, 0 
 	GOTO        L_pc_data_exchange199
 L__pc_data_exchange276:
-;exec_unit.c,545 :: 		wr->number     = rd->number;
+;exec_unit.c,546 :: 		wr->number     = rd->number;
 	MOVLW       2
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -3544,7 +3544,7 @@ L__pc_data_exchange276:
 	MOVWF       FSR0H 
 	MOVF        POSTINC0+0, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,546 :: 		wr->state      = (motors_state & (1 << rd->number)) ? TRUE : FALSE;   // Вкл/Выкл
+;exec_unit.c,547 :: 		wr->state      = (motors_state & (1 << rd->number)) ? TRUE : FALSE;   // Р’РєР»/Р’С‹РєР»
 	MOVLW       3
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       R4 
@@ -3603,7 +3603,7 @@ L_pc_data_exchange201:
 	MOVFF       R5, FSR1H
 	MOVF        ?FLOC___pc_data_exchangeT576+0, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,547 :: 		wr->protect    = motors[rd->number].protect;                          // Используется/Не используется
+;exec_unit.c,548 :: 		wr->protect    = motors[rd->number].protect;                          // РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ/РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
 	MOVLW       4
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -3645,7 +3645,7 @@ L__pc_data_exchange399:
 	MOVWF       FSR0H 
 	MOVF        POSTINC0+0, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,548 :: 		wr->start_time = motors[rd->number].start_time / 10;                  // Время разгона
+;exec_unit.c,549 :: 		wr->start_time = motors[rd->number].start_time / 10;                  // Р’СЂРµРјСЏ СЂР°Р·РіРѕРЅР°
 	MOVLW       5
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FLOC__pc_data_exchange+0 
@@ -3700,7 +3700,7 @@ L__pc_data_exchange401:
 	MOVWF       POSTINC1+0 
 	MOVF        R1, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,549 :: 		wr->cmd.result = CMD_RESULT_OK;
+;exec_unit.c,550 :: 		wr->cmd.result = CMD_RESULT_OK;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -3708,10 +3708,10 @@ L__pc_data_exchange401:
 	ADDWFC      pc_data_exchange_wr_L4_L4_L4_L4_L4+1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-;exec_unit.c,550 :: 		}
+;exec_unit.c,551 :: 		}
 	GOTO        L_pc_data_exchange202
 L_pc_data_exchange199:
-;exec_unit.c,553 :: 		wr->cmd.result = CMD_RESULT_BAD_INDEX;
+;exec_unit.c,554 :: 		wr->cmd.result = CMD_RESULT_BAD_INDEX;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -3720,13 +3720,13 @@ L_pc_data_exchange199:
 	MOVWF       FSR1H 
 	MOVLW       4
 	MOVWF       POSTINC1+0 
-;exec_unit.c,554 :: 		}
+;exec_unit.c,555 :: 		}
 L_pc_data_exchange202:
-;exec_unit.c,556 :: 		break;
+;exec_unit.c,557 :: 		break;
 	GOTO        L_pc_data_exchange185
-;exec_unit.c,559 :: 		case CMD_EU_SET_MOTOR_CONFIG:
+;exec_unit.c,560 :: 		case CMD_EU_SET_MOTOR_CONFIG:
 L_pc_data_exchange203:
-;exec_unit.c,561 :: 		struct s_eu_motor_config *rd = (struct s_eu_motor_config *)readbuff;
+;exec_unit.c,562 :: 		struct s_eu_motor_config *rd = (struct s_eu_motor_config *)readbuff;
 	MOVLW       _readbuff+0
 	MOVWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_readbuff+0)
@@ -3735,12 +3735,12 @@ L_pc_data_exchange203:
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_writebuff+0)
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4+1 
-;exec_unit.c,564 :: 		wr->cmd.name = CMD_EU_SET_MOTOR_CONFIG;
+;exec_unit.c,565 :: 		wr->cmd.name = CMD_EU_SET_MOTOR_CONFIG;
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4+0, FSR1
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4+1, FSR1H
 	MOVLW       6
 	MOVWF       POSTINC1+0 
-;exec_unit.c,565 :: 		if ( rd->number >= 0 && rd->number < 8 )
+;exec_unit.c,566 :: 		if ( rd->number >= 0 && rd->number < 8 )
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -3762,10 +3762,10 @@ L_pc_data_exchange203:
 	BTFSC       STATUS+0, 0 
 	GOTO        L_pc_data_exchange206
 L__pc_data_exchange275:
-;exec_unit.c,567 :: 		char i, enable = TRUE;
+;exec_unit.c,568 :: 		char i, enable = TRUE;
 	MOVLW       1
 	MOVWF       pc_data_exchange_enable_L5+0 
-;exec_unit.c,570 :: 		if ( rd->protect )
+;exec_unit.c,571 :: 		if ( rd->protect )
 	MOVLW       4
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -3775,7 +3775,7 @@ L__pc_data_exchange275:
 	MOVF        POSTINC0+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_pc_data_exchange207
-;exec_unit.c,572 :: 		for ( i = 0; i < rd->number; ++i )
+;exec_unit.c,573 :: 		for ( i = 0; i < rd->number; ++i )
 	CLRF        pc_data_exchange_i_L5+0 
 L_pc_data_exchange208:
 	MOVLW       2
@@ -3788,7 +3788,7 @@ L_pc_data_exchange208:
 	SUBWF       pc_data_exchange_i_L5+0, 0 
 	BTFSC       STATUS+0, 0 
 	GOTO        L_pc_data_exchange209
-;exec_unit.c,573 :: 		if ( !motors[i].protect )
+;exec_unit.c,574 :: 		if ( !motors[i].protect )
 	MOVLW       3
 	MOVWF       R2 
 	MOVF        pc_data_exchange_i_L5+0, 0 
@@ -3819,18 +3819,18 @@ L__pc_data_exchange403:
 	MOVF        R0, 1 
 	BTFSS       STATUS+0, 2 
 	GOTO        L_pc_data_exchange211
-;exec_unit.c,574 :: 		enable = FALSE;
+;exec_unit.c,575 :: 		enable = FALSE;
 	CLRF        pc_data_exchange_enable_L5+0 
 L_pc_data_exchange211:
-;exec_unit.c,572 :: 		for ( i = 0; i < rd->number; ++i )
+;exec_unit.c,573 :: 		for ( i = 0; i < rd->number; ++i )
 	INCF        pc_data_exchange_i_L5+0, 1 
-;exec_unit.c,574 :: 		enable = FALSE;
+;exec_unit.c,575 :: 		enable = FALSE;
 	GOTO        L_pc_data_exchange208
 L_pc_data_exchange209:
-;exec_unit.c,575 :: 		}
+;exec_unit.c,576 :: 		}
 	GOTO        L_pc_data_exchange212
 L_pc_data_exchange207:
-;exec_unit.c,578 :: 		for ( i = 8 - 1; i > rd->number; --i )
+;exec_unit.c,579 :: 		for ( i = 8 - 1; i > rd->number; --i )
 	MOVLW       7
 	MOVWF       pc_data_exchange_i_L5+0 
 L_pc_data_exchange213:
@@ -3844,7 +3844,7 @@ L_pc_data_exchange213:
 	SUBWF       POSTINC2+0, 0 
 	BTFSC       STATUS+0, 0 
 	GOTO        L_pc_data_exchange214
-;exec_unit.c,579 :: 		if ( motors[i].protect )
+;exec_unit.c,580 :: 		if ( motors[i].protect )
 	MOVLW       3
 	MOVWF       R2 
 	MOVF        pc_data_exchange_i_L5+0, 0 
@@ -3873,21 +3873,21 @@ L__pc_data_exchange405:
 	MOVF        POSTINC0+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_pc_data_exchange216
-;exec_unit.c,580 :: 		enable = FALSE;
+;exec_unit.c,581 :: 		enable = FALSE;
 	CLRF        pc_data_exchange_enable_L5+0 
 L_pc_data_exchange216:
-;exec_unit.c,578 :: 		for ( i = 8 - 1; i > rd->number; --i )
+;exec_unit.c,579 :: 		for ( i = 8 - 1; i > rd->number; --i )
 	DECF        pc_data_exchange_i_L5+0, 1 
-;exec_unit.c,580 :: 		enable = FALSE;
+;exec_unit.c,581 :: 		enable = FALSE;
 	GOTO        L_pc_data_exchange213
 L_pc_data_exchange214:
-;exec_unit.c,581 :: 		}
+;exec_unit.c,582 :: 		}
 L_pc_data_exchange212:
-;exec_unit.c,584 :: 		if ( enable )
+;exec_unit.c,585 :: 		if ( enable )
 	MOVF        pc_data_exchange_enable_L5+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_pc_data_exchange217
-;exec_unit.c,586 :: 		motor_stop(rd->number, FALSE);                       // Останавливаем двигатель
+;exec_unit.c,587 :: 		motor_stop(rd->number, FALSE);                       // РћСЃС‚Р°РЅР°РІР»РёРІР°РµРј РґРІРёРіР°С‚РµР»СЊ
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -3898,7 +3898,7 @@ L_pc_data_exchange212:
 	MOVWF       FARG_motor_stop_number+0 
 	CLRF        FARG_motor_stop_failure+0 
 	CALL        _motor_stop+0, 0
-;exec_unit.c,588 :: 		if ( write_config_byte(0x01 + (rd->number * 3), rd->protect) && write_config_word(0x02 + (rd->number * 3), rd->start_time * 10) )
+;exec_unit.c,589 :: 		if ( write_config_byte(0x01 + (rd->number * 3), rd->protect) && write_config_word(0x02 + (rd->number * 3), rd->start_time * 10) )
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -3965,7 +3965,7 @@ L_pc_data_exchange212:
 	BTFSC       STATUS+0, 2 
 	GOTO        L_pc_data_exchange220
 L__pc_data_exchange274:
-;exec_unit.c,590 :: 		motors[rd->number].protect = rd->protect;            // Защита
+;exec_unit.c,591 :: 		motors[rd->number].protect = rd->protect;            // Р—Р°С‰РёС‚Р°
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -4007,7 +4007,7 @@ L__pc_data_exchange407:
 	MOVWF       FSR0H 
 	MOVF        POSTINC0+0, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,591 :: 		motors[rd->number].start_time = rd->start_time * 10; // Время разгона
+;exec_unit.c,592 :: 		motors[rd->number].start_time = rd->start_time * 10; // Р’СЂРµРјСЏ СЂР°Р·РіРѕРЅР°
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -4062,11 +4062,11 @@ L__pc_data_exchange409:
 	MOVWF       POSTINC1+0 
 	MOVF        R1, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,593 :: 		protected_motors = motor_get_protected();            // Устанавливаем количество контролируемых двигателей
+;exec_unit.c,594 :: 		protected_motors = motor_get_protected();            // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРЅС‚СЂРѕР»РёСЂСѓРµРјС‹С… РґРІРёРіР°С‚РµР»РµР№
 	CALL        _motor_get_protected+0, 0
 	MOVF        R0, 0 
 	MOVWF       _protected_motors+0 
-;exec_unit.c,595 :: 		wr->cmd.result = CMD_RESULT_OK;
+;exec_unit.c,596 :: 		wr->cmd.result = CMD_RESULT_OK;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4074,10 +4074,10 @@ L__pc_data_exchange409:
 	ADDWFC      pc_data_exchange_wr_L4_L4_L4_L4_L4_L4+1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-;exec_unit.c,596 :: 		}
+;exec_unit.c,597 :: 		}
 	GOTO        L_pc_data_exchange221
 L_pc_data_exchange220:
-;exec_unit.c,599 :: 		wr->cmd.result = CMD_RESULT_EEPROM_WRITE_FAIL;
+;exec_unit.c,600 :: 		wr->cmd.result = CMD_RESULT_EEPROM_WRITE_FAIL;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4086,12 +4086,12 @@ L_pc_data_exchange220:
 	MOVWF       FSR1H 
 	MOVLW       6
 	MOVWF       POSTINC1+0 
-;exec_unit.c,600 :: 		}
-L_pc_data_exchange221:
 ;exec_unit.c,601 :: 		}
+L_pc_data_exchange221:
+;exec_unit.c,602 :: 		}
 	GOTO        L_pc_data_exchange222
 L_pc_data_exchange217:
-;exec_unit.c,604 :: 		wr->cmd.result = CMD_RESULT_BAD_PROTECT_ORDER;
+;exec_unit.c,605 :: 		wr->cmd.result = CMD_RESULT_BAD_PROTECT_ORDER;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4100,12 +4100,12 @@ L_pc_data_exchange217:
 	MOVWF       FSR1H 
 	MOVLW       5
 	MOVWF       POSTINC1+0 
-;exec_unit.c,605 :: 		}
-L_pc_data_exchange222:
 ;exec_unit.c,606 :: 		}
+L_pc_data_exchange222:
+;exec_unit.c,607 :: 		}
 	GOTO        L_pc_data_exchange223
 L_pc_data_exchange206:
-;exec_unit.c,609 :: 		wr->cmd.result = CMD_RESULT_BAD_INDEX;
+;exec_unit.c,610 :: 		wr->cmd.result = CMD_RESULT_BAD_INDEX;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4114,13 +4114,13 @@ L_pc_data_exchange206:
 	MOVWF       FSR1H 
 	MOVLW       4
 	MOVWF       POSTINC1+0 
-;exec_unit.c,610 :: 		}
+;exec_unit.c,611 :: 		}
 L_pc_data_exchange223:
-;exec_unit.c,612 :: 		break;
+;exec_unit.c,613 :: 		break;
 	GOTO        L_pc_data_exchange185
-;exec_unit.c,615 :: 		case CMD_EU_GET_MOTOR_STATE:
+;exec_unit.c,616 :: 		case CMD_EU_GET_MOTOR_STATE:
 L_pc_data_exchange224:
-;exec_unit.c,617 :: 		struct s_eu_motor_state *rd = (struct s_eu_motor_state *)readbuff;
+;exec_unit.c,618 :: 		struct s_eu_motor_state *rd = (struct s_eu_motor_state *)readbuff;
 	MOVLW       _readbuff+0
 	MOVWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_readbuff+0)
@@ -4129,12 +4129,12 @@ L_pc_data_exchange224:
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_writebuff+0)
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4+1 
-;exec_unit.c,620 :: 		wr->cmd.name = CMD_EU_GET_MOTOR_STATE;
+;exec_unit.c,621 :: 		wr->cmd.name = CMD_EU_GET_MOTOR_STATE;
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4+0, FSR1
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4+1, FSR1H
 	MOVLW       7
 	MOVWF       POSTINC1+0 
-;exec_unit.c,621 :: 		if ( rd->number >= 0 && rd->number < 8 )
+;exec_unit.c,622 :: 		if ( rd->number >= 0 && rd->number < 8 )
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -4156,7 +4156,7 @@ L_pc_data_exchange224:
 	BTFSC       STATUS+0, 0 
 	GOTO        L_pc_data_exchange227
 L__pc_data_exchange273:
-;exec_unit.c,623 :: 		wr->state = (motors_state & (1 << rd->number)) ? TRUE : FALSE;  // Состояние двигателя
+;exec_unit.c,624 :: 		wr->state = (motors_state & (1 << rd->number)) ? TRUE : FALSE;  // РЎРѕСЃС‚РѕСЏРЅРёРµ РґРІРёРіР°С‚РµР»СЏ
 	MOVLW       3
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       R4 
@@ -4215,7 +4215,7 @@ L_pc_data_exchange229:
 	MOVFF       R5, FSR1H
 	MOVF        ?FLOC___pc_data_exchangeT799+0, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,624 :: 		wr->cmd.result = CMD_RESULT_OK;
+;exec_unit.c,625 :: 		wr->cmd.result = CMD_RESULT_OK;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4223,10 +4223,10 @@ L_pc_data_exchange229:
 	ADDWFC      pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4+1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-;exec_unit.c,625 :: 		}
+;exec_unit.c,626 :: 		}
 	GOTO        L_pc_data_exchange230
 L_pc_data_exchange227:
-;exec_unit.c,628 :: 		wr->cmd.result = CMD_RESULT_BAD_INDEX;
+;exec_unit.c,629 :: 		wr->cmd.result = CMD_RESULT_BAD_INDEX;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4235,13 +4235,13 @@ L_pc_data_exchange227:
 	MOVWF       FSR1H 
 	MOVLW       4
 	MOVWF       POSTINC1+0 
-;exec_unit.c,629 :: 		}
+;exec_unit.c,630 :: 		}
 L_pc_data_exchange230:
-;exec_unit.c,631 :: 		break;
+;exec_unit.c,632 :: 		break;
 	GOTO        L_pc_data_exchange185
-;exec_unit.c,634 :: 		case CMD_EU_SET_MOTOR_STATE:
+;exec_unit.c,635 :: 		case CMD_EU_SET_MOTOR_STATE:
 L_pc_data_exchange231:
-;exec_unit.c,636 :: 		struct s_eu_motor_state *rd = (struct s_eu_motor_state *)readbuff;
+;exec_unit.c,637 :: 		struct s_eu_motor_state *rd = (struct s_eu_motor_state *)readbuff;
 	MOVLW       _readbuff+0
 	MOVWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_readbuff+0)
@@ -4250,12 +4250,12 @@ L_pc_data_exchange231:
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_writebuff+0)
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4+1 
-;exec_unit.c,639 :: 		wr->cmd.name = CMD_EU_SET_MOTOR_STATE;
+;exec_unit.c,640 :: 		wr->cmd.name = CMD_EU_SET_MOTOR_STATE;
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4+0, FSR1
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4+1, FSR1H
 	MOVLW       8
 	MOVWF       POSTINC1+0 
-;exec_unit.c,640 :: 		if ( rd->number >= 0 && rd->number < 8 )
+;exec_unit.c,641 :: 		if ( rd->number >= 0 && rd->number < 8 )
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -4277,7 +4277,7 @@ L_pc_data_exchange231:
 	BTFSC       STATUS+0, 0 
 	GOTO        L_pc_data_exchange234
 L__pc_data_exchange272:
-;exec_unit.c,642 :: 		if ( rd->state )
+;exec_unit.c,643 :: 		if ( rd->state )
 	MOVLW       3
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -4287,7 +4287,7 @@ L__pc_data_exchange272:
 	MOVF        POSTINC0+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_pc_data_exchange235
-;exec_unit.c,643 :: 		motor_start(rd->number);                            // Запуск
+;exec_unit.c,644 :: 		motor_start(rd->number);                            // Р—Р°РїСѓСЃРє
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -4299,7 +4299,7 @@ L__pc_data_exchange272:
 	CALL        _motor_start+0, 0
 	GOTO        L_pc_data_exchange236
 L_pc_data_exchange235:
-;exec_unit.c,645 :: 		motor_stop(rd->number, FALSE);                      // Остановка
+;exec_unit.c,646 :: 		motor_stop(rd->number, FALSE);                      // РћСЃС‚Р°РЅРѕРІРєР°
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -4311,7 +4311,7 @@ L_pc_data_exchange235:
 	CLRF        FARG_motor_stop_failure+0 
 	CALL        _motor_stop+0, 0
 L_pc_data_exchange236:
-;exec_unit.c,647 :: 		wr->cmd.result = CMD_RESULT_OK;
+;exec_unit.c,648 :: 		wr->cmd.result = CMD_RESULT_OK;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4319,10 +4319,10 @@ L_pc_data_exchange236:
 	ADDWFC      pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4+1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-;exec_unit.c,648 :: 		}
+;exec_unit.c,649 :: 		}
 	GOTO        L_pc_data_exchange237
 L_pc_data_exchange234:
-;exec_unit.c,651 :: 		wr->cmd.result = CMD_RESULT_BAD_INDEX;
+;exec_unit.c,652 :: 		wr->cmd.result = CMD_RESULT_BAD_INDEX;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4331,24 +4331,24 @@ L_pc_data_exchange234:
 	MOVWF       FSR1H 
 	MOVLW       4
 	MOVWF       POSTINC1+0 
-;exec_unit.c,652 :: 		}
+;exec_unit.c,653 :: 		}
 L_pc_data_exchange237:
-;exec_unit.c,654 :: 		break;
+;exec_unit.c,655 :: 		break;
 	GOTO        L_pc_data_exchange185
-;exec_unit.c,657 :: 		case CMD_EU_GET_UNIT_STATE:
+;exec_unit.c,658 :: 		case CMD_EU_GET_UNIT_STATE:
 L_pc_data_exchange238:
-;exec_unit.c,659 :: 		struct s_eu_unit_state *rd = (struct s_eu_unit_state *)readbuff;
-;exec_unit.c,660 :: 		struct s_eu_unit_state *wr = (struct s_eu_unit_state *)writebuff;
+;exec_unit.c,660 :: 		struct s_eu_unit_state *rd = (struct s_eu_unit_state *)readbuff;
+;exec_unit.c,661 :: 		struct s_eu_unit_state *wr = (struct s_eu_unit_state *)writebuff;
 	MOVLW       _writebuff+0
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_writebuff+0)
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4+1 
-;exec_unit.c,662 :: 		wr->cmd.name   = CMD_EU_GET_UNIT_STATE;
+;exec_unit.c,663 :: 		wr->cmd.name   = CMD_EU_GET_UNIT_STATE;
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, FSR1
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4+1, FSR1H
 	MOVLW       9
 	MOVWF       POSTINC1+0 
-;exec_unit.c,663 :: 		wr->state      = is_connected;                              // Состояние блока
+;exec_unit.c,664 :: 		wr->state      = is_connected;                              // РЎРѕСЃС‚РѕСЏРЅРёРµ Р±Р»РѕРєР°
 	MOVLW       2
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4357,7 +4357,7 @@ L_pc_data_exchange238:
 	MOVWF       FSR1H 
 	MOVF        _is_connected+0, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,664 :: 		wr->cmd.result = CMD_RESULT_OK;
+;exec_unit.c,665 :: 		wr->cmd.result = CMD_RESULT_OK;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4365,11 +4365,11 @@ L_pc_data_exchange238:
 	ADDWFC      pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4+1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-;exec_unit.c,666 :: 		break;
+;exec_unit.c,667 :: 		break;
 	GOTO        L_pc_data_exchange185
-;exec_unit.c,669 :: 		case CMD_EU_LOAD_CONFIG:
+;exec_unit.c,670 :: 		case CMD_EU_LOAD_CONFIG:
 L_pc_data_exchange239:
-;exec_unit.c,671 :: 		struct s_eu_config_data *rd = (struct s_eu_config_data *)readbuff;
+;exec_unit.c,672 :: 		struct s_eu_config_data *rd = (struct s_eu_config_data *)readbuff;
 	MOVLW       _readbuff+0
 	MOVWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_readbuff+0)
@@ -4378,12 +4378,12 @@ L_pc_data_exchange239:
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_writebuff+0)
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+1 
-;exec_unit.c,674 :: 		wr->cmd.name = CMD_EU_LOAD_CONFIG;
+;exec_unit.c,675 :: 		wr->cmd.name = CMD_EU_LOAD_CONFIG;
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, FSR1
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+1, FSR1H
 	MOVLW       10
 	MOVWF       POSTINC1+0 
-;exec_unit.c,676 :: 		if ( !(rd->magic[0] == 'E' && rd->magic[1] == 'C' && rd->magic[2] == 'O' && rd->magic[3] == 'N' && rd->magic[4] == 'F') )
+;exec_unit.c,677 :: 		if ( !(rd->magic[0] == 'E' && rd->magic[1] == 'C' && rd->magic[2] == 'O' && rd->magic[3] == 'N' && rd->magic[4] == 'F') )
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR0 
@@ -4467,7 +4467,7 @@ L_pc_data_exchange240:
 	MOVF        R0, 1 
 	BTFSS       STATUS+0, 2 
 	GOTO        L_pc_data_exchange242
-;exec_unit.c,678 :: 		wr->cmd.result = CMD_RESULT_BAD_FORMAT;
+;exec_unit.c,679 :: 		wr->cmd.result = CMD_RESULT_BAD_FORMAT;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4476,10 +4476,10 @@ L_pc_data_exchange240:
 	MOVWF       FSR1H 
 	MOVLW       8
 	MOVWF       POSTINC1+0 
-;exec_unit.c,679 :: 		}
+;exec_unit.c,680 :: 		}
 	GOTO        L_pc_data_exchange243
 L_pc_data_exchange242:
-;exec_unit.c,682 :: 		if ( crc16(rd->magic, 30) == rd->check_sum )
+;exec_unit.c,683 :: 		if ( crc16(rd->magic, 30) == rd->check_sum )
 	MOVLW       2
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FARG_crc16_block+0 
@@ -4510,10 +4510,10 @@ L_pc_data_exchange242:
 L__pc_data_exchange412:
 	BTFSS       STATUS+0, 2 
 	GOTO        L_pc_data_exchange244
-;exec_unit.c,684 :: 		uchar res = TRUE;
+;exec_unit.c,685 :: 		uchar res = TRUE;
 	MOVLW       1
 	MOVWF       pc_data_exchange_res_L6+0 
-;exec_unit.c,688 :: 		res = write_config_byte(0x00, rd->number);
+;exec_unit.c,689 :: 		res = write_config_byte(0x00, rd->number);
 	CLRF        FARG_write_config_byte_addr+0 
 	MOVLW       7
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
@@ -4526,21 +4526,21 @@ L__pc_data_exchange412:
 	CALL        _write_config_byte+0, 0
 	MOVF        R0, 0 
 	MOVWF       pc_data_exchange_res_L6+0 
-;exec_unit.c,690 :: 		p = rd->protect;
+;exec_unit.c,691 :: 		p = rd->protect;
 	MOVLW       8
 	ADDWF       pc_data_exchange_rd_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       pc_data_exchange_p_L6+0 
 	MOVLW       0
 	ADDWFC      pc_data_exchange_rd_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+1, 0 
 	MOVWF       pc_data_exchange_p_L6+1 
-;exec_unit.c,691 :: 		for ( i = 0; i < 24; i += 3 )
+;exec_unit.c,692 :: 		for ( i = 0; i < 24; i += 3 )
 	CLRF        pc_data_exchange_i_L6+0 
 L_pc_data_exchange245:
 	MOVLW       24
 	SUBWF       pc_data_exchange_i_L6+0, 0 
 	BTFSC       STATUS+0, 0 
 	GOTO        L_pc_data_exchange246
-;exec_unit.c,693 :: 		res &= write_config_byte(0x01 + i, *(uchar *)p);
+;exec_unit.c,694 :: 		res &= write_config_byte(0x01 + i, *(uchar *)p);
 	MOVF        pc_data_exchange_i_L6+0, 0 
 	ADDLW       1
 	MOVWF       FARG_write_config_byte_addr+0 
@@ -4551,10 +4551,10 @@ L_pc_data_exchange245:
 	CALL        _write_config_byte+0, 0
 	MOVF        R0, 0 
 	ANDWF       pc_data_exchange_res_L6+0, 1 
-;exec_unit.c,694 :: 		p += 1;
+;exec_unit.c,695 :: 		p += 1;
 	INFSNZ      pc_data_exchange_p_L6+0, 1 
 	INCF        pc_data_exchange_p_L6+1, 1 
-;exec_unit.c,695 :: 		res &= write_config_word(0x02 + i, *(ushort *)p);
+;exec_unit.c,696 :: 		res &= write_config_word(0x02 + i, *(ushort *)p);
 	MOVF        pc_data_exchange_i_L6+0, 0 
 	ADDLW       2
 	MOVWF       FARG_write_config_word_addr+0 
@@ -4567,22 +4567,22 @@ L_pc_data_exchange245:
 	CALL        _write_config_word+0, 0
 	MOVF        R0, 0 
 	ANDWF       pc_data_exchange_res_L6+0, 1 
-;exec_unit.c,696 :: 		p += 2;
+;exec_unit.c,697 :: 		p += 2;
 	MOVLW       2
 	ADDWF       pc_data_exchange_p_L6+0, 1 
 	MOVLW       0
 	ADDWFC      pc_data_exchange_p_L6+1, 1 
-;exec_unit.c,691 :: 		for ( i = 0; i < 24; i += 3 )
+;exec_unit.c,692 :: 		for ( i = 0; i < 24; i += 3 )
 	MOVLW       3
 	ADDWF       pc_data_exchange_i_L6+0, 1 
-;exec_unit.c,697 :: 		}
+;exec_unit.c,698 :: 		}
 	GOTO        L_pc_data_exchange245
 L_pc_data_exchange246:
-;exec_unit.c,699 :: 		if ( res )
+;exec_unit.c,700 :: 		if ( res )
 	MOVF        pc_data_exchange_res_L6+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_pc_data_exchange248
-;exec_unit.c,701 :: 		wr->cmd.result = CMD_RESULT_OK;                 // Успешно
+;exec_unit.c,702 :: 		wr->cmd.result = CMD_RESULT_OK;                 // РЈСЃРїРµС€РЅРѕ
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4590,13 +4590,13 @@ L_pc_data_exchange246:
 	ADDWFC      pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-;exec_unit.c,702 :: 		reboot_needed  = TRUE;                          // Требуется перезагрузка
+;exec_unit.c,703 :: 		reboot_needed  = TRUE;                          // РўСЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµР·Р°РіСЂСѓР·РєР°
 	MOVLW       1
 	MOVWF       _reboot_needed+0 
-;exec_unit.c,703 :: 		}
+;exec_unit.c,704 :: 		}
 	GOTO        L_pc_data_exchange249
 L_pc_data_exchange248:
-;exec_unit.c,705 :: 		wr->cmd.result = CMD_RESULT_EEPROM_WRITE_FAIL;  // Ошибка при записи EEPROM
+;exec_unit.c,706 :: 		wr->cmd.result = CMD_RESULT_EEPROM_WRITE_FAIL;  // РћС€РёР±РєР° РїСЂРё Р·Р°РїРёСЃРё EEPROM
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4606,10 +4606,10 @@ L_pc_data_exchange248:
 	MOVLW       6
 	MOVWF       POSTINC1+0 
 L_pc_data_exchange249:
-;exec_unit.c,706 :: 		}
+;exec_unit.c,707 :: 		}
 	GOTO        L_pc_data_exchange250
 L_pc_data_exchange244:
-;exec_unit.c,709 :: 		wr->cmd.result = CMD_RESULT_BAD_CHECK_SUM;
+;exec_unit.c,710 :: 		wr->cmd.result = CMD_RESULT_BAD_CHECK_SUM;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4618,26 +4618,26 @@ L_pc_data_exchange244:
 	MOVWF       FSR1H 
 	MOVLW       9
 	MOVWF       POSTINC1+0 
-;exec_unit.c,710 :: 		}
-L_pc_data_exchange250:
 ;exec_unit.c,711 :: 		}
+L_pc_data_exchange250:
+;exec_unit.c,712 :: 		}
 L_pc_data_exchange243:
-;exec_unit.c,713 :: 		break;
+;exec_unit.c,714 :: 		break;
 	GOTO        L_pc_data_exchange185
-;exec_unit.c,716 :: 		case CMD_EU_SAVE_CONFIG:
+;exec_unit.c,717 :: 		case CMD_EU_SAVE_CONFIG:
 L_pc_data_exchange251:
-;exec_unit.c,718 :: 		struct s_eu_config_data *rd = (struct s_eu_config_data *)readbuff;
-;exec_unit.c,719 :: 		struct s_eu_config_data *wr = (struct s_eu_config_data *)writebuff;
+;exec_unit.c,719 :: 		struct s_eu_config_data *rd = (struct s_eu_config_data *)readbuff;
+;exec_unit.c,720 :: 		struct s_eu_config_data *wr = (struct s_eu_config_data *)writebuff;
 	MOVLW       _writebuff+0
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_writebuff+0)
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+1 
-;exec_unit.c,723 :: 		wr->cmd.name = CMD_EU_SAVE_CONFIG;
+;exec_unit.c,724 :: 		wr->cmd.name = CMD_EU_SAVE_CONFIG;
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, FSR1
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+1, FSR1H
 	MOVLW       11
 	MOVWF       POSTINC1+0 
-;exec_unit.c,725 :: 		wr->magic[0] = 'E';
+;exec_unit.c,726 :: 		wr->magic[0] = 'E';
 	MOVLW       2
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4646,7 +4646,7 @@ L_pc_data_exchange251:
 	MOVWF       FSR1H 
 	MOVLW       69
 	MOVWF       POSTINC1+0 
-;exec_unit.c,726 :: 		wr->magic[1] = 'C';
+;exec_unit.c,727 :: 		wr->magic[1] = 'C';
 	MOVLW       2
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       R0 
@@ -4661,7 +4661,7 @@ L_pc_data_exchange251:
 	MOVWF       FSR1H 
 	MOVLW       67
 	MOVWF       POSTINC1+0 
-;exec_unit.c,727 :: 		wr->magic[2] = 'O';
+;exec_unit.c,728 :: 		wr->magic[2] = 'O';
 	MOVLW       2
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       R0 
@@ -4676,7 +4676,7 @@ L_pc_data_exchange251:
 	MOVWF       FSR1H 
 	MOVLW       79
 	MOVWF       POSTINC1+0 
-;exec_unit.c,728 :: 		wr->magic[3] = 'N';
+;exec_unit.c,729 :: 		wr->magic[3] = 'N';
 	MOVLW       2
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       R0 
@@ -4691,7 +4691,7 @@ L_pc_data_exchange251:
 	MOVWF       FSR1H 
 	MOVLW       78
 	MOVWF       POSTINC1+0 
-;exec_unit.c,729 :: 		wr->magic[4] = 'F';
+;exec_unit.c,730 :: 		wr->magic[4] = 'F';
 	MOVLW       2
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       R0 
@@ -4706,7 +4706,7 @@ L_pc_data_exchange251:
 	MOVWF       FSR1H 
 	MOVLW       70
 	MOVWF       POSTINC1+0 
-;exec_unit.c,730 :: 		wr->number   = unit_number;
+;exec_unit.c,731 :: 		wr->number   = unit_number;
 	MOVLW       7
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4715,21 +4715,21 @@ L_pc_data_exchange251:
 	MOVWF       FSR1H 
 	MOVF        _unit_number+0, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,732 :: 		p = wr->protect;
+;exec_unit.c,733 :: 		p = wr->protect;
 	MOVLW       8
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       pc_data_exchange_p_L4+0 
 	MOVLW       0
 	ADDWFC      pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+1, 0 
 	MOVWF       pc_data_exchange_p_L4+1 
-;exec_unit.c,733 :: 		for ( i = 0; i < MOTOR_MAX; ++i )
+;exec_unit.c,734 :: 		for ( i = 0; i < MOTOR_MAX; ++i )
 	CLRF        pc_data_exchange_i_L4+0 
 L_pc_data_exchange252:
 	MOVLW       8
 	SUBWF       pc_data_exchange_i_L4+0, 0 
 	BTFSC       STATUS+0, 0 
 	GOTO        L_pc_data_exchange253
-;exec_unit.c,735 :: 		*(uchar *)p  = motors[i].protect;
+;exec_unit.c,736 :: 		*(uchar *)p  = motors[i].protect;
 	MOVLW       3
 	MOVWF       R2 
 	MOVF        pc_data_exchange_i_L4+0, 0 
@@ -4759,10 +4759,10 @@ L__pc_data_exchange414:
 	MOVFF       pc_data_exchange_p_L4+1, FSR1H
 	MOVF        POSTINC0+0, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,736 :: 		p += 1;
+;exec_unit.c,737 :: 		p += 1;
 	INFSNZ      pc_data_exchange_p_L4+0, 1 
 	INCF        pc_data_exchange_p_L4+1, 1 
-;exec_unit.c,737 :: 		*(ushort *)p = motors[i].start_time;
+;exec_unit.c,738 :: 		*(ushort *)p = motors[i].start_time;
 	MOVLW       3
 	MOVWF       R2 
 	MOVF        pc_data_exchange_i_L4+0, 0 
@@ -4794,17 +4794,17 @@ L__pc_data_exchange416:
 	MOVWF       POSTINC1+0 
 	MOVF        POSTINC0+0, 0 
 	MOVWF       POSTINC1+0 
-;exec_unit.c,738 :: 		p += 2;
+;exec_unit.c,739 :: 		p += 2;
 	MOVLW       2
 	ADDWF       pc_data_exchange_p_L4+0, 1 
 	MOVLW       0
 	ADDWFC      pc_data_exchange_p_L4+1, 1 
-;exec_unit.c,733 :: 		for ( i = 0; i < MOTOR_MAX; ++i )
+;exec_unit.c,734 :: 		for ( i = 0; i < MOTOR_MAX; ++i )
 	INCF        pc_data_exchange_i_L4+0, 1 
-;exec_unit.c,739 :: 		}
+;exec_unit.c,740 :: 		}
 	GOTO        L_pc_data_exchange252
 L_pc_data_exchange253:
-;exec_unit.c,741 :: 		wr->check_sum = crc16(wr->magic, 30);                       // Рассчитываем контрольную сумму, начиная с magic
+;exec_unit.c,742 :: 		wr->check_sum = crc16(wr->magic, 30);                       // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РєРѕРЅС‚СЂРѕР»СЊРЅСѓСЋ СЃСѓРјРјСѓ, РЅР°С‡РёРЅР°СЏ СЃ magic
 	MOVLW       32
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FLOC__pc_data_exchange+0 
@@ -4828,7 +4828,7 @@ L_pc_data_exchange253:
 	MOVWF       POSTINC1+0 
 	MOVLW       0
 	MOVWF       POSTINC1+0 
-;exec_unit.c,743 :: 		wr->cmd.result = CMD_RESULT_OK;
+;exec_unit.c,744 :: 		wr->cmd.result = CMD_RESULT_OK;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4836,16 +4836,16 @@ L_pc_data_exchange253:
 	ADDWFC      pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-;exec_unit.c,745 :: 		break;
+;exec_unit.c,746 :: 		break;
 	GOTO        L_pc_data_exchange185
-;exec_unit.c,748 :: 		default:
+;exec_unit.c,749 :: 		default:
 L_pc_data_exchange255:
-;exec_unit.c,750 :: 		struct s_cmd_header *wr = (struct s_cmd_header *)writebuff;
+;exec_unit.c,751 :: 		struct s_cmd_header *wr = (struct s_cmd_header *)writebuff;
 	MOVLW       _writebuff+0
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0 
 	MOVLW       hi_addr(_writebuff+0)
 	MOVWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+1 
-;exec_unit.c,751 :: 		memset(writebuff, 0, USB_REPORT_SIZE);
+;exec_unit.c,752 :: 		memset(writebuff, 0, USB_REPORT_SIZE);
 	MOVLW       _writebuff+0
 	MOVWF       FARG_memset_p1+0 
 	MOVLW       hi_addr(_writebuff+0)
@@ -4856,11 +4856,11 @@ L_pc_data_exchange255:
 	MOVLW       0
 	MOVWF       FARG_memset_n+1 
 	CALL        _memset+0, 0
-;exec_unit.c,752 :: 		wr->name = CMD_EU_UNKNOWN;
+;exec_unit.c,753 :: 		wr->name = CMD_EU_UNKNOWN;
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, FSR1
 	MOVFF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+1, FSR1H
 	CLRF        POSTINC1+0 
-;exec_unit.c,753 :: 		wr->result = CMD_RESULT_FAIL;
+;exec_unit.c,754 :: 		wr->result = CMD_RESULT_FAIL;
 	MOVLW       1
 	ADDWF       pc_data_exchange_wr_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4_L4+0, 0 
 	MOVWF       FSR1 
@@ -4869,7 +4869,7 @@ L_pc_data_exchange255:
 	MOVWF       FSR1H 
 	MOVLW       1
 	MOVWF       POSTINC1+0 
-;exec_unit.c,755 :: 		}
+;exec_unit.c,756 :: 		}
 	GOTO        L_pc_data_exchange185
 L_pc_data_exchange184:
 	MOVFF       FLOC__pc_data_exchange+2, FSR0
@@ -4940,32 +4940,32 @@ L_pc_data_exchange184:
 	GOTO        L_pc_data_exchange251
 	GOTO        L_pc_data_exchange255
 L_pc_data_exchange185:
-;exec_unit.c,757 :: 		usb_write();                                                        // Передача команды в ПК
+;exec_unit.c,758 :: 		usb_write();                                                        // РџРµСЂРµРґР°С‡Р° РєРѕРјР°РЅРґС‹ РІ РџРљ
 	CALL        _usb_write+0, 0
-;exec_unit.c,758 :: 		}
-L_pc_data_exchange183:
 ;exec_unit.c,759 :: 		}
-L_pc_data_exchange182:
+L_pc_data_exchange183:
 ;exec_unit.c,760 :: 		}
+L_pc_data_exchange182:
+;exec_unit.c,761 :: 		}
 L_end_pc_data_exchange:
 	RETURN      0
 ; end of _pc_data_exchange
 
 _reboot_check:
 
-;exec_unit.c,763 :: 		void reboot_check( )
-;exec_unit.c,765 :: 		if ( reboot_needed )
+;exec_unit.c,764 :: 		void reboot_check( )
+;exec_unit.c,766 :: 		if ( reboot_needed )
 	MOVF        _reboot_needed+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_reboot_check256
-;exec_unit.c,768 :: 		if ( usb_state_on )
+;exec_unit.c,769 :: 		if ( usb_state_on )
 	MOVF        _usb_state_on+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_reboot_check257
-;exec_unit.c,769 :: 		usb_off();
+;exec_unit.c,770 :: 		usb_off();
 	CALL        _usb_off+0, 0
 L_reboot_check257:
-;exec_unit.c,772 :: 		delay_ms(1000);
+;exec_unit.c,773 :: 		Delay_ms(1000);
 	MOVLW       26
 	MOVWF       R11, 0
 	MOVLW       94
@@ -4980,19 +4980,19 @@ L_reboot_check258:
 	DECFSZ      R11, 1, 1
 	BRA         L_reboot_check258
 	NOP
-;exec_unit.c,775 :: 		__asm reset
+;exec_unit.c,776 :: 		__asm reset
 	RESET
-;exec_unit.c,776 :: 		}
-L_reboot_check256:
 ;exec_unit.c,777 :: 		}
+L_reboot_check256:
+;exec_unit.c,778 :: 		}
 L_end_reboot_check:
 	RETURN      0
 ; end of _reboot_check
 
 _main:
 
-;exec_unit.c,780 :: 		void main()
-;exec_unit.c,782 :: 		delay_ms(1000);                                                             // Ждем инициализации остальных компонентов
+;exec_unit.c,781 :: 		void main()
+;exec_unit.c,783 :: 		Delay_ms(1000);                                                             // Р–РґРµРј РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РѕСЃС‚Р°Р»СЊРЅС‹С… РєРѕРјРїРѕРЅРµРЅС‚РѕРІ
 	MOVLW       26
 	MOVWF       R11, 0
 	MOVLW       94
@@ -5007,37 +5007,37 @@ L_main259:
 	DECFSZ      R11, 1, 1
 	BRA         L_main259
 	NOP
-;exec_unit.c,784 :: 		init();                                                                     // Общая инициализация
+;exec_unit.c,785 :: 		init();                                                                     // РћР±С‰Р°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
 	CALL        _init+0, 0
-;exec_unit.c,786 :: 		transceiver_init();                                                         // Приемопередатчик
+;exec_unit.c,787 :: 		transceiver_init();                                                         // РџСЂРёРµРјРѕРїРµСЂРµРґР°С‚С‡РёРє
 	CALL        _transceiver_init+0, 0
-;exec_unit.c,788 :: 		hc165_init();                                                               // HC165
+;exec_unit.c,789 :: 		hc165_init();                                                               // HC165
 	CALL        _hc165_init+0, 0
-;exec_unit.c,790 :: 		motor_init();                                                               // Двигатели
+;exec_unit.c,791 :: 		motor_init();                                                               // Р”РІРёРіР°С‚РµР»Рё
 	CALL        _motor_init+0, 0
-;exec_unit.c,792 :: 		load_config();                                                              // Загрузка конфигурации
+;exec_unit.c,793 :: 		load_config();                                                              // Р—Р°РіСЂСѓР·РєР° РєРѕРЅС„РёРіСѓСЂР°С†РёРё
 	CALL        _load_config+0, 0
-;exec_unit.c,794 :: 		timer1_init();
+;exec_unit.c,795 :: 		timer1_init();
 	CALL        _timer1_init+0, 0
-;exec_unit.c,796 :: 		net_init(5);                                                                // Сеть
+;exec_unit.c,797 :: 		net_init(5);                                                                // РЎРµС‚СЊ
 	MOVLW       5
 	MOVWF       FARG_net_init_send_attempts+0 
 	CALL        _net_init+0, 0
-;exec_unit.c,798 :: 		net_set_params(unit_number, 20);                                            // Установка параметров приемопередатчика
+;exec_unit.c,799 :: 		net_set_params(unit_number, 20);                                            // РЈСЃС‚Р°РЅРѕРІРєР° РїР°СЂР°РјРµС‚СЂРѕРІ РїСЂРёРµРјРѕРїРµСЂРµРґР°С‚С‡РёРєР°
 	MOVF        _unit_number+0, 0 
 	MOVWF       FARG_net_set_params_addr+0 
 	MOVLW       20
 	MOVWF       FARG_net_set_params_ack_wait_time+0 
 	CALL        _net_set_params+0, 0
-;exec_unit.c,801 :: 		INTCON.GIE  = 1;
+;exec_unit.c,802 :: 		INTCON.GIE  = 1;
 	BSF         INTCON+0, 7 
-;exec_unit.c,802 :: 		INTCON.PEIE = 1;
+;exec_unit.c,803 :: 		INTCON.PEIE = 1;
 	BSF         INTCON+0, 6 
-;exec_unit.c,804 :: 		while ( TRUE )
+;exec_unit.c,805 :: 		while ( TRUE )
 L_main260:
-;exec_unit.c,807 :: 		exec_commands();
+;exec_unit.c,808 :: 		exec_commands();
 	CALL        _exec_commands+0, 0
-;exec_unit.c,810 :: 		if ( motor_read(&motors_state) || changes )
+;exec_unit.c,811 :: 		if ( motor_read(&motors_state) || changes )
 	MOVLW       _motors_state+0
 	MOVWF       FARG_motor_read_state+0 
 	MOVLW       hi_addr(_motors_state+0)
@@ -5051,7 +5051,7 @@ L_main260:
 	GOTO        L__main279
 	GOTO        L_main264
 L__main279:
-;exec_unit.c,811 :: 		if ( net_send(SERVER_ADDRESS, NET_CMD_MOTORS_STATE, (uchar *)&motors_state, 0) == 0 )
+;exec_unit.c,812 :: 		if ( net_send(SERVER_ADDRESS, NET_CMD_MOTORS_STATE, (uchar *)&motors_state, 0) == 0 )
 	MOVLW       254
 	MOVWF       FARG_net_send_addr+0 
 	MOVLW       12
@@ -5066,11 +5066,11 @@ L__main279:
 	XORLW       0
 	BTFSS       STATUS+0, 2 
 	GOTO        L_main265
-;exec_unit.c,812 :: 		motor_reset_fail_state(); // Если команда о состоянии двигателей успешно отправлена, сбрасываем аварийное состояние двигателей
+;exec_unit.c,813 :: 		motor_reset_fail_state(); // Р•СЃР»Рё РєРѕРјР°РЅРґР° Рѕ СЃРѕСЃС‚РѕСЏРЅРёРё РґРІРёРіР°С‚РµР»РµР№ СѓСЃРїРµС€РЅРѕ РѕС‚РїСЂР°РІР»РµРЅР°, СЃР±СЂР°СЃС‹РІР°РµРј Р°РІР°СЂРёР№РЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РґРІРёРіР°С‚РµР»РµР№
 	CALL        _motor_reset_fail_state+0, 0
 L_main265:
 L_main264:
-;exec_unit.c,815 :: 		if ( sensors_read(&sensors_state) || changes )
+;exec_unit.c,816 :: 		if ( sensors_read(&sensors_state) || changes )
 	MOVLW       _sensors_state+0
 	MOVWF       FARG_sensors_read_state+0 
 	MOVLW       hi_addr(_sensors_state+0)
@@ -5084,7 +5084,7 @@ L_main264:
 	GOTO        L__main278
 	GOTO        L_main268
 L__main278:
-;exec_unit.c,816 :: 		net_send(SERVER_ADDRESS, NET_CMD_SENSORS_STATE, (uchar *)&sensors_state, 0);
+;exec_unit.c,817 :: 		net_send(SERVER_ADDRESS, NET_CMD_SENSORS_STATE, (uchar *)&sensors_state, 0);
 	MOVLW       254
 	MOVWF       FARG_net_send_addr+0 
 	MOVLW       10
@@ -5096,17 +5096,17 @@ L__main278:
 	CLRF        FARG_net_send_attempts+0 
 	CALL        _net_send+0, 0
 L_main268:
-;exec_unit.c,819 :: 		motor_protect_control();
+;exec_unit.c,820 :: 		motor_protect_control();
 	CALL        _motor_protect_control+0, 0
-;exec_unit.c,822 :: 		pc_data_exchange();
+;exec_unit.c,823 :: 		pc_data_exchange();
 	CALL        _pc_data_exchange+0, 0
-;exec_unit.c,825 :: 		changes = FALSE;
+;exec_unit.c,826 :: 		changes = FALSE;
 	CLRF        _changes+0 
-;exec_unit.c,828 :: 		reboot_check();
+;exec_unit.c,829 :: 		reboot_check();
 	CALL        _reboot_check+0, 0
-;exec_unit.c,829 :: 		}
-	GOTO        L_main260
 ;exec_unit.c,830 :: 		}
+	GOTO        L_main260
+;exec_unit.c,831 :: 		}
 L_end_main:
 	GOTO        $+0
 ; end of _main

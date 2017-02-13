@@ -145,11 +145,11 @@ const struct{
 const struct{
   char bLength;
   char bDscType;
-  unsigned int string[23];
+  unsigned int string[26];
 }strd3={
-    48,          //sizeof this descriptor string
+    54,          //sizeof this descriptor string
     0x03,
-    {'S','m','a','r','t','H','o','u','s','e',' ','E','c','u','t','i','v','e',' ','U','n','i','t'}
+    {'S','m','a','r','t',' ','H','o','u','s','e',' ','E','x','e','c','u','t','i','v','e',' ','U','n','i','t'}
  };
 
 //Array of configuration descriptors

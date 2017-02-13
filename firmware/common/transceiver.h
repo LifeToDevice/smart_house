@@ -14,7 +14,7 @@ void transceiver_init( )
     COMM_DATA_PIN       = 0;
     COMM_DATA_READY_DIR = 1;      // COMM_DATA_READY - вход
     
-    delay_ms(50);
+    Delay_ms(50);
 }
 
 // Передача данных
@@ -59,9 +59,9 @@ unsigned char transceiver_send( unsigned char *cmd, unsigned char *result )
                 COMM_DATA_PIN = 0;
 
             COMM_CLK_PIN = 1;
-            delay_us(PULSE_TIME);
+            Delay_us(PULSE_TIME);
             COMM_CLK_PIN = 0;
-            delay_us(PULSE_TIME);   //?????
+            Delay_us(PULSE_TIME);   //?????
 
             d[n] <<= 1;
         }
@@ -86,14 +86,14 @@ unsigned char transceiver_send( unsigned char *cmd, unsigned char *result )
         for ( i = 0; i < 8; ++i )
         {
           COMM_CLK_PIN = 1;
-          delay_us(PULSE_TIME);
+          Delay_us(PULSE_TIME);
 
           d[n] <<= 1;             // Сдвиг
           if ( COMM_DATA_PIN )    // Единица
               d[n] |= 1;
 
           COMM_CLK_PIN = 0;
-          delay_us(PULSE_TIME);
+          Delay_us(PULSE_TIME);
         }
     }
 
@@ -126,7 +126,7 @@ unsigned char transceiver_recv( unsigned char *result )
     COMM_RD_PIN  = 0;  //
     COMM_CLK_PIN = 0;
 
-    delay_ms(1); // Ждем готовности записи
+    Delay_ms(1); // Ждем готовности записи
 
     if ( !COMM_DATA_READY_PIN ) // Запись отклонена
     {
@@ -142,14 +142,14 @@ unsigned char transceiver_recv( unsigned char *result )
         for ( i = 0; i < 8; ++i )
         {
             COMM_CLK_PIN = 1;
-            delay_us(PULSE_TIME);
+            Delay_us(PULSE_TIME);
 
             d[n] <<= 1;           // Сдвиг
             if ( COMM_DATA_PIN )  // Единица
                 d[n] |= 1;
 
             COMM_CLK_PIN = 0;
-            delay_us(PULSE_TIME);
+            Delay_us(PULSE_TIME);
         }
     }
 

@@ -74,7 +74,7 @@ unsigned char net_send( unsigned char addr, unsigned char cmd, unsigned char *da
             return 0;
             
         if ( attempts )
-            delay_ms(100); // подождем
+            Delay_ms(100); // подождем
     }
     
     return res;

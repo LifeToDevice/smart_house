@@ -1,19 +1,19 @@
-#line 1 "C:/projects/elevator/source/mc/exec_unit/exec_unit.c"
-#line 1 "c:/projects/elevator/source/mc/exec_unit/exec_unit.h"
-#line 1 "c:/projects/elevator/source/mc/exec_unit/../../common/types.h"
-#line 17 "c:/projects/elevator/source/mc/exec_unit/../../common/types.h"
+#line 1 "C:/Program Files/Git/smart_house/exec_unit/exec_unit.c"
+#line 1 "c:/program files/git/smart_house/exec_unit/exec_unit.h"
+#line 1 "c:/program files/git/smart_house/exec_unit/../common/types.h"
+#line 17 "c:/program files/git/smart_house/exec_unit/../common/types.h"
 typedef unsigned char uchar;
 typedef unsigned int ushort;
 typedef unsigned long ulong;
-#line 1 "c:/projects/elevator/source/mc/exec_unit/../../common/unit_data_exchange.h"
-#line 1 "c:/projects/elevator/source/mc/exec_unit/../../common/types.h"
-#line 62 "c:/projects/elevator/source/mc/exec_unit/../../common/unit_data_exchange.h"
+#line 1 "c:/program files/git/smart_house/exec_unit/../common/unit_data_exchange.h"
+#line 1 "c:/program files/git/smart_house/exec_unit/../common/types.h"
+#line 63 "c:/program files/git/smart_house/exec_unit/../common/unit_data_exchange.h"
 struct s_cmd_header
 {
  uchar name;
  uchar result;
 };
-#line 80 "c:/projects/elevator/source/mc/exec_unit/../../common/unit_data_exchange.h"
+#line 81 "c:/program files/git/smart_house/exec_unit/../common/unit_data_exchange.h"
 struct s_eu_motors_state
 {
  struct s_cmd_header cmd;
@@ -164,15 +164,15 @@ struct s_cu_debug_cmd
  uchar dbg_cmd;
  uchar dat[61];
 };
-#line 1 "c:/projects/elevator/source/mc/exec_unit/../../common/net_commands.h"
-#line 10 "c:/projects/elevator/source/mc/exec_unit/../../common/net_commands.h"
+#line 1 "c:/program files/git/smart_house/exec_unit/../common/net_commands.h"
+#line 10 "c:/program files/git/smart_house/exec_unit/../common/net_commands.h"
 struct s_net_cmd
 {
  uchar addr;
  uchar cmd;
  ushort dat;
 };
-#line 1 "c:/projects/elevator/source/mc/exec_unit/../common/transceiver.h"
+#line 1 "c:/program files/git/smart_house/exec_unit/../common/transceiver.h"
 
 
 
@@ -189,7 +189,7 @@ void transceiver_init( )
   RB4_bit  = 0;
   TRISB3_bit  = 1;
 
- delay_ms(50);
+ Delay_ms(50);
 }
 
 
@@ -234,9 +234,9 @@ unsigned char transceiver_send( unsigned char *cmd, unsigned char *result )
   RB4_bit  = 0;
 
   RB5_bit  = 1;
- delay_us( 10 );
+ Delay_us( 10 );
   RB5_bit  = 0;
- delay_us( 10 );
+ Delay_us( 10 );
 
  d[n] <<= 1;
  }
@@ -261,14 +261,14 @@ unsigned char transceiver_send( unsigned char *cmd, unsigned char *result )
  for ( i = 0; i < 8; ++i )
  {
   RB5_bit  = 1;
- delay_us( 10 );
+ Delay_us( 10 );
 
  d[n] <<= 1;
  if (  RB4_bit  )
  d[n] |= 1;
 
   RB5_bit  = 0;
- delay_us( 10 );
+ Delay_us( 10 );
  }
  }
 
@@ -301,7 +301,7 @@ unsigned char transceiver_recv( unsigned char *result )
   RB6_bit  = 0;
   RB5_bit  = 0;
 
- delay_ms(1);
+ Delay_ms(1);
 
  if ( ! RB3_bit  )
  {
@@ -317,14 +317,14 @@ unsigned char transceiver_recv( unsigned char *result )
  for ( i = 0; i < 8; ++i )
  {
   RB5_bit  = 1;
- delay_us( 10 );
+ Delay_us( 10 );
 
  d[n] <<= 1;
  if (  RB4_bit  )
  d[n] |= 1;
 
   RB5_bit  = 0;
- delay_us( 10 );
+ Delay_us( 10 );
  }
  }
 
@@ -337,14 +337,13 @@ unsigned char transceiver_recv( unsigned char *result )
 
  return 1;
 }
-#line 1 "c:/projects/elevator/source/mc/exec_unit/../common/net.h"
+#line 1 "c:/program files/git/smart_house/exec_unit/../common/net.h"
 static net_send_attempts = 1;
 
 void net_init( char send_attempts )
 {
  net_send_attempts = send_attempts;
 }
-
 
 
 
@@ -415,14 +414,14 @@ unsigned char net_send( unsigned char addr, unsigned char cmd, unsigned char *da
  return 0;
 
  if ( attempts )
- delay_ms(100);
+ Delay_ms(100);
  }
 
  return res;
 }
-#line 1 "c:/projects/elevator/source/mc/exec_unit/hc165.h"
-#line 1 "c:/projects/elevator/source/mc/exec_unit/../../common/types.h"
-#line 7 "c:/projects/elevator/source/mc/exec_unit/hc165.h"
+#line 1 "c:/program files/git/smart_house/exec_unit/hc165.h"
+#line 1 "c:/program files/git/smart_house/exec_unit/../common/types.h"
+#line 7 "c:/program files/git/smart_house/exec_unit/hc165.h"
 void hc165_init( )
 {
   TRISD7_bit  = 0;
@@ -441,7 +440,7 @@ ulong hc165_read( uchar bits_count )
  ulong val = 0;
 
   RD7_bit  = 0;
- delay_us(1);
+ Delay_us(1);
   RD7_bit  = 1;
 
  for ( i = 0; i < bits_count; i++ )
@@ -451,14 +450,14 @@ ulong hc165_read( uchar bits_count )
  val |= 1;
 
   RD6_bit  = 0;
- delay_us(1);
+ Delay_us(1);
   RD6_bit  = 1;
- delay_us(1);
+ Delay_us(1);
  }
 
  return val;
 }
-#line 75 "c:/projects/elevator/source/mc/exec_unit/exec_unit.h"
+#line 75 "c:/program files/git/smart_house/exec_unit/exec_unit.h"
 struct s_motor
 {
  uchar state;
@@ -473,7 +472,7 @@ void motor_init( );
 void motor_acceleration_control( );
 void motor_start( uchar number );
 void motor_stop( uchar number, uchar failure );
-#line 1 "c:/projects/elevator/source/mc/exec_unit/../common/usb.h"
+#line 1 "c:/program files/git/smart_house/exec_unit/../common/usb.h"
 unsigned char readbuff[ 64 ] absolute 0x500;
 unsigned char writebuff[ 64 ] absolute 0x500 +  64 ;
 
@@ -496,7 +495,7 @@ void usb_off( )
 {
  HID_Disable();
 }
-#line 1 "c:/projects/elevator/source/mc/exec_unit/../common/internal_eeprom.h"
+#line 1 "c:/program files/git/smart_house/exec_unit/../common/internal_eeprom.h"
 
 unsigned char ee_read( unsigned char addr )
 {
@@ -511,24 +510,24 @@ unsigned char ee_read( unsigned char addr )
 
 unsigned char ee_write( unsigned char addr, unsigned char val )
 {
- char int_state = GIE_Bit;
+ char int_state = GIE_bit;
  while ( WR_bit );
  EEADR = addr;
  EEDATA = val;
  EEPGD_bit = 0;
  CFGS_bit = 0;
  WREN_bit = 1;
- GIE_Bit = 0;
+ GIE_bit = 0;
  EECON2 = 0x55;
  EECON2 = 0xAA;
  WR_bit = 1;
- GIE_Bit = int_state;
+ GIE_bit = int_state;
  WREN_bit = 0;
  while ( WR_bit );
  return (WRERR_bit == 0);
 }
-#line 1 "c:/projects/elevator/source/mc/exec_unit/../common/crc.h"
-#line 13 "c:/projects/elevator/source/mc/exec_unit/../common/crc.h"
+#line 1 "c:/program files/git/smart_house/exec_unit/../common/crc.h"
+#line 11 "c:/program files/git/smart_house/exec_unit/../common/crc.h"
 unsigned char crc8( uchar *block, uchar len )
 {
  uchar crc = 0xFF;
@@ -543,7 +542,7 @@ unsigned char crc8( uchar *block, uchar len )
 
  return crc;
 }
-#line 39 "c:/projects/elevator/source/mc/exec_unit/../common/crc.h"
+#line 36 "c:/program files/git/smart_house/exec_unit/../common/crc.h"
 unsigned short crc16( uchar *block, ushort len )
 {
  ushort crc = 0xFFFF;
@@ -557,7 +556,7 @@ unsigned short crc16( uchar *block, ushort len )
  }
  return crc;
 }
-#line 13 "C:/projects/elevator/source/mc/exec_unit/exec_unit.c"
+#line 13 "C:/Program Files/Git/smart_house/exec_unit/exec_unit.c"
 ulong curr_sensors_state = 0;
 ulong prev_sensors_state = 0;
 ulong curr_motors_state = 0;
@@ -815,7 +814,7 @@ uchar write_config_word( uchar addr, ushort dat )
 void protect_restore( )
 {
   RD1_bit  = 1;
- delay_ms(100);
+ Delay_ms(100);
   RD1_bit  = 0;
 }
 
@@ -827,7 +826,7 @@ void exec_commands( )
 
  while ( 1 )
  {
- delay_ms(1);
+ Delay_ms(1);
  memset(buff, 0, 5);
  if ( transceiver_recv(buff) )
  {
@@ -835,7 +834,7 @@ void exec_commands( )
 
  switch ( buff[1] )
  {
-#line 296 "C:/projects/elevator/source/mc/exec_unit/exec_unit.c"
+#line 296 "C:/Program Files/Git/smart_house/exec_unit/exec_unit.c"
  case  16 :
   RD4_bit  = ~ RD4_bit ;
  changes =  1 ;
@@ -863,7 +862,7 @@ void exec_commands( )
  }
  }
 
- delay_ms(100);
+ Delay_ms(100);
 }
 
 
@@ -919,7 +918,7 @@ char sensors_read( ulong *state )
  res = 1;
  }
 
- delay_ms(50);
+ Delay_ms(50);
 
  return res;
 }
@@ -1030,6 +1029,7 @@ void pc_data_exchange( )
  struct s_eu_unit_number *wr = (struct s_eu_unit_number *)writebuff;
 
  wr->cmd.name =  2 ;
+
  if ( rd->number >= 1 && rd->number <= 253 )
  {
  if ( write_config_byte(0x00, rd->number) )
@@ -1312,7 +1312,7 @@ void reboot_check( )
  usb_off();
 
 
- delay_ms(1000);
+ Delay_ms(1000);
 
 
  __asm reset
@@ -1322,7 +1322,7 @@ void reboot_check( )
 
 void main()
 {
- delay_ms(1000);
+ Delay_ms(1000);
 
  init();
 

@@ -267,7 +267,7 @@ uchar write_config_word( uchar addr, ushort dat )
 void protect_restore( )
 {
     SENSORS_PWR_RESTORE_PIN = 1;
-    delay_ms(100);
+    Delay_ms(100);
     SENSORS_PWR_RESTORE_PIN = 0;
 }
 
@@ -279,7 +279,7 @@ void exec_commands( )
 
     while ( 1 )                                                                 // Читает из приемопередатчика, пока есть данные
     {
-        delay_ms(1);
+        Delay_ms(1);
         memset(buff, 0, 5);
         if ( transceiver_recv(buff) )                                           // Есть данные
         {
@@ -320,7 +320,7 @@ void exec_commands( )
         }
     }
     
-    delay_ms(100);                                                              // ???
+    Delay_ms(100);                                                              // ???
 }
 
 // Чтение состояний датчиков
@@ -376,7 +376,7 @@ char sensors_read( ulong *state )
         res = 1;
     }
     
-    delay_ms(50);
+    Delay_ms(50);
     
     return res;
 }
@@ -770,7 +770,7 @@ void reboot_check( )
             usb_off();
         
         // Подождем
-        delay_ms(1000);
+        Delay_ms(1000);
         
         // Сброс
         __asm reset
@@ -780,7 +780,7 @@ void reboot_check( )
 
 void main()
 {
-    delay_ms(1000);                                                             // Ждем инициализации остальных компонентов
+    Delay_ms(1000);                                                             // Ждем инициализации остальных компонентов
     
     init();                                                                     // Общая инициализация
     
