@@ -1,5 +1,5 @@
-const unsigned int USB_VENDOR_ID = 0x1209;   // TEST VID
-const unsigned int USB_PRODUCT_ID = 0x0001;  // TEST PID
+const unsigned int USB_VENDOR_ID  = 0x1209;  // VID
+const unsigned int USB_PRODUCT_ID = 0xFFFF;  // PID
 const char USB_SELF_POWER = 0xC0;            // Self powered 0xC0,  0x80 bus powered
 const char USB_MAX_POWER = 50;               // Bus power required in units of 2 mA
 const char HID_INPUT_REPORT_BYTES = 64;
