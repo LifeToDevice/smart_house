@@ -20,7 +20,7 @@
  DATA2     - данные (байт 2)                     - 8 бит
  DATA3     - данные (байт 3)                     - 8 бит
  DATA4     - данные (байт 4)                     - 8 бит
- CHECKSUM  - контрольная сумма предыдущих 6 байт - 8 бит
+ CHECKSUM  - контрольная сумма предыдущих 7 байт - 8 бит
  
  -----------------------------------------------------------------------------------------------------------------------
  
@@ -79,17 +79,9 @@
 #define ERR_BUS_BUSY            1                                               // Линия занята
 #define ERR_PACKET_LOST         2                                               // Пакет потерян
 
-
-/*
-// Временные интервалы кодирования
-#define BIT_START_TIME          20                                              // Время стартового условия передачи бита
-#define BIT_ONE_TIME            2000                                            // Время кодирования 1
-#define BIT_ZERO_TIME           1000                                            // Время кодирования 0  */
-
 #define BIT_START_TIME          10                                              // Время стартового условия передачи бита
 #define BIT_ONE_TIME            30                                              // Время кодирования 1
 #define BIT_ZERO_TIME           10                                              // Время кодирования 0
-
 
 // Временные интервалы приема битов
 #define HI_TIME_MIN             55                                              // Минимальное время кодирования 1
@@ -103,9 +95,6 @@
 
 #define QUEUE_SIZE              16                                              // Максимальный размер очереди принятых команд (в командах)
 
-// Время ожидания подтверждения (мс)
-//#define ACK_TIMEOUT             10
-
 // Управление MAX485
 #define MAX485_TRANSMIT         { DE_RE_PIN = 1; DI_PIN = 0; }                  // Режим передачи
 #define MAX485_RECEIVE          { DE_RE_PIN = 0; DI_PIN = 0; }                  // Режим приема
@@ -114,13 +103,14 @@
 #define INT_ENABLE              { INTCON.GIE = 1; }                             // Все прерывания разрешены
 #define INT_DISABLE             { INTCON.GIE = 0; }                             // Все прерывания запрещены
 
+// Очередь команд (структура)
 struct s_data_queue
 {
     unsigned char b[COMMAND_SIZE];
 };
 
 // Глобальные переменные
-unsigned char device_addr = 0;                                                  // Адрес устройства ( 0 .. 254 )
+unsigned char device_addr = 0;                                                  // Адрес устройства ( 1 .. 255 )
 unsigned char packet_num = 0;                                                   // Номер пакета ( 1..127 )
 
 unsigned char send_buf[PACKET_SIZE];                                            // Буфер передачи
@@ -142,8 +132,11 @@ bit comm_wr_processed;                                                          
 bit comm_rd_complete;
 struct s_data_queue comm_cmd;                                                   // Буфер приема/передачи от мастер устройства
 
-unsigned char ack_timeout = 100;
+unsigned char ack_timeout = 100;                                                // Время одижания получения подтверждения
 
+//
+// Обработчик прерываний
+//
 void interrupt( )
 {
     if ( TMR0IF_bit )                                                           // Переполение таймера 0 (данные не передаются в течении длительного времени)
@@ -199,21 +192,9 @@ void interrupt( )
     }
 }
 
-/*
-
-  Контрольная сумма
-
-  Name  : CRC-8
-  Poly  : 0x31    x^8 + x^5 + x^4 + 1
-  Init  : 0xFF
-  Revert: false
-  XorOut: 0x00
-  Check : 0xF7 ("123456789")
-  MaxLen: 15 байт(127 бит) - обнаружение
-  одинарных, двойных, тройных 
-  и всех нечетных ошибок
-
-*/
+//
+// Контрольная сумма CRC-8
+//
 unsigned char crc8( unsigned char *block )
 {
     unsigned char crc = 0xFF;
@@ -230,8 +211,9 @@ unsigned char crc8( unsigned char *block )
     return crc;
 }
 
-
+//
 // Передача данных (d - данные, size - размер)
+//
 void send_data( unsigned char *d, unsigned char size )
 {
     unsigned char b, i;
@@ -261,7 +243,9 @@ void send_data( unsigned char *d, unsigned char size )
     DI_PIN = 1;
 }
 
+//
 // Передача пакета подтверждения (d - принятый буфер)
+//
 void send_ack( unsigned char *bf )
 {
     Delay_us(500);
@@ -282,7 +266,9 @@ void send_ack( unsigned char *bf )
     MAX485_RECEIVE;                                                             // Переводим MAX485 в режим приема
 }
 
-// Передача пакета ( cmd - данные (1 байт - получатель, 3 байта - данные))
+//
+// Передача пакета ( cmd - данные (1 байт - получатель, остальные 4 байта - данные))
+//
 unsigned char send_packet( unsigned char *cmd )
 {
     unsigned char res = ERR_PACKET_LOST;                                        // Результат выполнения
@@ -321,7 +307,7 @@ unsigned char send_packet( unsigned char *cmd )
         {
             INT_DISABLE;
             
-            if ( crc8(recv_buf) == recv_buf[PACKET_SIZE - 1] )                   // Если контрольная сумма верная
+            if ( crc8(recv_buf) == recv_buf[PACKET_SIZE - 1] )                  // Если контрольная сумма верная
             {
                 if ( recv_buf[2] & 0b10000000 )                                 // Если полученные данные это подтверждение (ACK) ( установлен 8-й бит в номере пакета)
                 {
@@ -351,7 +337,9 @@ unsigned char send_packet( unsigned char *cmd )
     return res;                                                                 // Возвращаем результат
 }
 
+//
 // Добавляем полученную команду в конец очереди
+//
 void push_command( )
 {
     if ( data_queue_size == QUEUE_SIZE - 1 )                                    // Если очередь полностью заполнена, игнорируем принимаемые данные
@@ -366,15 +354,17 @@ void push_command( )
     data_queue_size++;                                                          // Смещаем указатель на последний элемент очереди
 }
 
+//
 // Извлекаем первую в очереди команду
+//
 void pop_command( struct s_data_queue *cmd )
 {
     unsigned char i;
     
-    if ( data_queue_size == 0 )                                                     // Если очередь пуста, ничего не делаем
+    if ( data_queue_size == 0 )                                                 // Если очередь пуста, ничего не делаем
         return;
     
-    memcpy(cmd, &data_queue[0], sizeof(struct s_data_queue));                    // Извлекаем первый элемент из очереди
+    memcpy(cmd, &data_queue[0], sizeof(struct s_data_queue));                   // Извлекаем первый элемент из очереди
     
     for ( i = 0; i < data_queue_size - 1; ++i )                                 // Смещаем очередь
         memcpy(&data_queue[i], &data_queue[i + 1], sizeof(struct s_data_queue));
@@ -382,7 +372,9 @@ void pop_command( struct s_data_queue *cmd )
     data_queue_size--;                                                          // Уменьшаем размер очереди
 }
 
+//
 // Обработка полученного пакета
+//
 void process_received_packet( )
 {
     if ( recv_done )                                                            // Данные получены
@@ -405,7 +397,9 @@ void process_received_packet( )
     }
 }
 
+//
 // Прием данных от мастер устройства
+//
 void comm_read( )
 {
     unsigned char i, n;
@@ -415,7 +409,6 @@ void comm_read( )
     
     memset(&comm_cmd, 0, sizeof(struct s_data_queue));
     
-    //comm_rw_value = 0;                                                          // 4-х байтовая переменная
     comm_clk_prev_state = 0;                                                    // Предыдущее состоянии COMM_CLK_PIN
     comm_rd_complete = 0;
         
@@ -439,7 +432,7 @@ void comm_read( )
         {
             comm_clk_prev_state = 1;
             
-            comm_cmd.b[i] <<= 1;                                                  // Сдвиг
+            comm_cmd.b[i] <<= 1;                                                // Сдвиг
             if ( COMM_DATA_PIN )                                                // Единица
                 comm_cmd.b[i] |= 1;
                 
@@ -460,7 +453,7 @@ void comm_read( )
     
     if ( comm_rd_complete )                                                     // Принята команда
     {
-        if ( comm_cmd.b[0] == 255 )                              // Установка адреса устройства (если адрес получателя 0)  // fix 255 ?
+        if ( comm_cmd.b[0] == 255 )                                             // Установка адреса устройства (если адрес получателя 0)  // fix 255 ?
         {
             device_addr = comm_cmd.b[1];
             ack_timeout = comm_cmd.b[2];
@@ -468,8 +461,8 @@ void comm_read( )
         }
         else
         {
-            if ( send_packet(comm_cmd.b) == ERR_PACKET_LOST ) // Отправка пакета
-               memset(&comm_cmd, 0, sizeof(struct s_data_queue));                                                  // Ошибка отправки ( подтверждение не получено) - 0
+            if ( send_packet(comm_cmd.b) == ERR_PACKET_LOST )                   // Отправка пакета
+               memset(&comm_cmd, 0, sizeof(struct s_data_queue));               // Ошибка отправки ( подтверждение не получено) - 0
         }
     }
     
@@ -489,7 +482,7 @@ void comm_read( )
             else
                 COMM_DATA_PIN = 0;                                              // Ноль
 
-            comm_cmd.b[i] <<= 1;                                                     // Сдвиг
+            comm_cmd.b[i] <<= 1;                                                // Сдвиг
             if ( ++n >= 8 )
             {
                 if ( i )
@@ -508,9 +501,9 @@ void comm_read( )
     INT_ENABLE;
 }
 
-
-
+//
 // Передача данных в мастер устройство
+//
 void comm_write( )
 {
     unsigned char i, n;
@@ -520,7 +513,6 @@ void comm_write( )
     
     memset(&comm_cmd, 0, sizeof(struct s_data_queue));
     
-    //comm_rw_value = 0;                                                          // 4-х байтовая переменная
     comm_clk_prev_state = 0;                                                    // Предыдущее состоянии COMM_CLK_PIN
     comm_wr_processed = 0;                                                      // Процесс передачи не начат
     
@@ -528,13 +520,13 @@ void comm_write( )
     
     INT_DISABLE;
     
-    if ( recv_processing || data_queue_size == 0 )                                    // Если идет процесс приема пакета или очередь пуста, ничего не делаем
+    if ( recv_processing || data_queue_size == 0 )                              // Если идет процесс приема пакета или очередь пуста, ничего не делаем
     {
         INT_ENABLE;
         return;
     }
     
-    while ( !COMM_RD_PIN && !COMM_WR_PIN )                                                      // Если COMM_WR_PIN = 0 мастер устройство начало процесс приема данных
+    while ( !COMM_RD_PIN && !COMM_WR_PIN )                                      // Если COMM_WR_PIN = 0 мастер устройство начало процесс приема данных
     {
         if ( !comm_wr_processed )                                               // Если передача не начата
         {
@@ -544,7 +536,7 @@ void comm_write( )
             {
                 i = COMMAND_SIZE - 1;
                 n = 0;
-                pop_command(&comm_cmd);                                              // Извлекаем команду из очереди
+                pop_command(&comm_cmd);                                         // Извлекаем команду из очереди
                 COMM_DATA_DIR = 0;                                              // Пин данных - выход
                 COMM_DATA_READY_PIN = 1;                                        // Устанавливаем готовность передачи данных мастер устройству
             }
@@ -559,7 +551,7 @@ void comm_write( )
             else
                 COMM_DATA_PIN = 0;                                              // Ноль
                
-            comm_cmd.b[i] <<= 1;                                                     // Сдвиг
+            comm_cmd.b[i] <<= 1;                                                // Сдвиг
             if ( ++n >= 8 )
             {
                 if ( i )
@@ -578,7 +570,9 @@ void comm_write( )
     INT_ENABLE;
 }
 
-
+//
+// Точка входа
+//
 void main()
 {
     unsigned long led_counter = 0;
@@ -605,7 +599,7 @@ void main()
     OPTION_REG.T0CS     = 0;                                                    // Тактирование таймера 0 от внутреннего генератора
     OPTION_REG.PSA      = 0;                                                    // Использовать пределитель для таймера 0
     OPTION_REG.PS2      = 0;                                                    // Предделитель
-    OPTION_REG.PS1      = 1;  //1
+    OPTION_REG.PS1      = 1;
     OPTION_REG.PS0      = 0;
 
     INTCON.PEIE         = 1;                                                    // Разрешаем периферийные прерывания
@@ -628,7 +622,7 @@ void main()
 
         comm_write();                                                           // Передача данных в мастер устройство
         
-        if ( led_counter++ > 10000 )
+        if ( led_counter++ > 10000 )                                            // Индикация работы
         {
             led_counter = 0;
             LED_PIN = ~LED_PIN;
