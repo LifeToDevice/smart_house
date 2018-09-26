@@ -40,4 +40,4 @@ ulong hc165_read( uchar bits_count )
     return val;
 }
 
-#endif
+#endif // _HC165_H_
